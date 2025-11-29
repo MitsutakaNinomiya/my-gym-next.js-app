@@ -1,23 +1,21 @@
-"use client"
-//↑が無いと useState/useEffectが使えない
-//"client" = クライアント（ブラウザ側）で動くコンポーネントにする宣言
+"use client";
 
 import { useEffect } from "react";
-import { supabase } from "@/lib/supabaseClient";
+// import { supabase } from "@/lib/supabaseClient";
 
 export default function Page() {
   useEffect(() => {
-    const testSupabase = async () => {
-      const { data, error } = await supabase.from("logs").select("*");
+    // const testSupabase = async () => {
+    //   const { data, error } = await supabase.from("logs").select("*");
 
-      if (error) {
-        console.error("❌ Supabaseエラー:", error);
-      } else {
-        console.log("✅ Supabase接続成功！ data:", data);
-      }
-    };
+    //   if (error) {
+    //     console.error("❌ Supabaseエラー:", error);
+    //   } else {
+    //     console.log("✅ Supabase接続成功！ data:", data);
+    //   }
+    // };
 
-    testSupabase();
+    // testSupabase();
   }, []);
 
   return (
@@ -26,6 +24,7 @@ export default function Page() {
     </main>
   );
 }
+
 
 
 
