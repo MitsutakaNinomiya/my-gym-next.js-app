@@ -1,7 +1,7 @@
 // app/history/page.tsx
 "use client";
 // "use client": このファイルはクライアントコンポーネント（ブラウザ側）で動く宣言
-
+ 
 import { useEffect, useState } from "react";
 import type { Log } from "../App"; // App.tsxでexportしたLog型を再利用
 
