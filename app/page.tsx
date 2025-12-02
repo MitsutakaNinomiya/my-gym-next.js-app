@@ -11,75 +11,104 @@ type Log = {
 
 
 export default async function Home() {
-  //supabaseからlogsテーブルを全部取得
-  //from = どのテーブルから取るか
-  //select = どのカラムを取るか　"*"は全部
-  const { data: logs, error} = await supabase //awaitは時間のかかるネットワーク通信を待つために使う
+  const { data: logs, error } = await supabase
     .from("logs")
     .select("*")
-    .order("created_at", { ascending: false}); //新しい順に並べる
+    .order("created_at", { ascending: false });
 
-    console.log("logs from supabase:", logs);
+  console.log("logs from supabase:", logs);
   console.log("supabase error:", error);
 
-  if(error) {
-    console.log(error);
+  if (error) {
     return (
-      <main className="min-h-screen p-8">
+      <main className="min-h-screen bg-gray-950 text-gray-50 p-8">
         <h1 className="text-2xl font-bold mb-4">筋トレログ</h1>
         <p className="text-red-500">データ取得に失敗しました。</p>
       </main>
     );
   }
 
-
   return (
-    <main className="min-h-screen p-8">
-      <h1 className="test-2xl font-bold mb-4">筋トレログ(supabaseから取得)</h1>
+    <main className="min-h-screen bg-gray-950 text-gray-50 p-6 md:p-10">
+      {/*ヘッダー・追加ボタン */}
+    <header>
+      <h1 className="text-2xl font-bold mb-6">
+        筋トレログ(Supabaseから取得)
+      </h1>
 
-      {/* 確認ゾーン */}
-      <section className="mb-6">
+        <button 
+          className="rounded-lg bg-emerald-500 px-4 py-2 text-sm font-semibold text-white hover:bg-emerald-600 "
+        >
+          新規ログ追加
+        </button>
+      </header>
+
+      {/* JSON確認ゾーン（デバッグ用。邪魔なら後で消してOK） */}
+      <section className="mb-8">
         <h2 className="text-lg font-semibold mb-2">生データ(JSON)</h2>
         <pre className="bg-gray-900 text-gray-100 p-4 rounded-lg text-sm overflow-x-auto">
           {JSON.stringify(logs, null, 2)}
         </pre>
       </section>
 
-      {/* 一件ずつ表示してみる */}
-      <section className="space-y-4">
-        <h2 className="text-lg font-semibold mb-2">ログ一覧</h2>
-        {(!logs || logs.length ===0 ) && (
-          <p>まだログがありません</p>
+
+
+      {/* ログ一覧 UI */}
+      <section>
+        <h2 className="text-lg font-semibold mb-3">ログ一覧</h2>
+
+{/*logs が存在しない または logs が0件 のどちらかの場合、“まだログがありません” を表示する*/}
+        {(!logs || logs.length === 0) && (            
+          <p className="text-sm text-gray-400">まだログがありません</p>
         )}
 
-        {logs?.map((log: Log) => ( // .?はエラーをスルーする  return の代わりにundefined が返る
-          <div  
-            key={log.id} 
-            className="border border-gray-700 rounded-lg p-4"
-          >
-            <p className="text-xs text-gray-400 mb-1">
-              ID:{log.id}
-            </p>
-            <p className="text-sm">
-              {/*実際のカラム名に合わせて後で修正していく */}
-              created_at: {log.created_at ?? "不明"}
-            </p>
-          </div>
-        ))}
-      
+        {/* grid（グリッドレイアウト）でカードを並べる */}
+        <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
+          {logs?.map((log: Log) => (
+            <article
+              key={log.id}
+              className="rounded-xl border border-gray-800 bg-gray-900/70 p-4 shadow"
+            >
+              {/* 上段：日付とID */}
+              <div className="flex items-center justify-between text-xs text-gray-400 mb-1">
+                <span>{log.date ?? "日付未入力"}</span>
+                <span>ID: {log.id}</span>
+              </div>
+
+              {/* 中段：部位 / 種目 */}
+              <p className="text-sm font-semibold">
+                {log.part ?? "部位不明"} / {log.exercise ?? "種目不明"}
+              </p>
+
+              {/* 重量 × 回数 */}
+              <p className="mt-1 text-sm">
+                重量: {log.weight ?? "-"} kg × {log.reps ?? "-"} 回
+              </p>
+
+              {/* メモがあるときだけ表示（&& は「かつ」の意味でよく使われる） */}
+              {log.memo && (
+                <p className="mt-2 text-sm text-gray-300 whitespace-pre-wrap">
+                  メモ: {log.memo}
+                </p>
+              )}
+              {/*ボタンエリア*/}
+              <div className="mt-4 flex justify-end gap-2">
+                <button
+                  className="rounded-md border border-gray-600 px-3 py-1 text-xs text-gray-100 hover:bg-gray-700"
+                >
+                  編集
+                </button>
+
+                <button
+                  className="rounded-md bg-red-600 px-3 py-1 text-xs text-white hover:bg-red-700"
+                >
+                  削除
+                </button>
+              </div>
+            </article>
+          ))}
+        </div>
       </section>
     </main>
-  )
-
+  );
 }
-
-
-
-
-// import App from "./App";    
-
-
-// export default function Page() { 
-//     return <App />;
-  
-// }
