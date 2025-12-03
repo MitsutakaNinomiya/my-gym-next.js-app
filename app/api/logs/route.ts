@@ -3,7 +3,7 @@ import { NextResponse } from "next/server";
 // 「レスポンスをJSONで返す」みたいな時に使う
 
 import { supabase } from "@/lib/supabaseClient";
-// さっき作った supabaseクライアント（電話機）
+
 
 export async function GET() {
   // GET = HTTPメソッドのGET
@@ -73,4 +73,34 @@ export async function POST(request: Request) {
   }
 
   return NextResponse.json(data, { status: 201 }); // 201 = Created（作成成功）
+}
+
+
+
+
+
+export async function DELETE(request: Request) {
+  const { id } = await request.json();
+
+  if (!id) {
+    return NextResponse.json(
+      { error: "id が指定されていません" },
+      { status: 400 }
+    );
+  }
+
+  const { error } = await supabase
+    .from("logs")
+    .delete()
+    .eq("id", id);
+
+  if (error) {
+    console.error(error);
+    return NextResponse.json(
+      { error: "削除に失敗しました" },
+      { status: 500 }
+    );
+  }
+
+  return NextResponse.json({ ok: true });
 }
