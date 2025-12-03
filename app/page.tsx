@@ -90,12 +90,13 @@ export default async function Home() {
               )}
               {/*ボタンエリア*/}
               <div className="mt-4 flex justify-end gap-2">
-                <Link
-                  href={`/logs/edit?id=${log.id}`} 
-                  className="rounded-md border border-gray-600 px-3 py-1 text-xs text-gray-100 hover:bg-gray-700"
+              <Link
+                href={`/logs/edit?id=${log.id}`}
+                className="rounded-md border border-gray-600 px-3 py-1 text-xs text-gray-100 hover:bg-gray-700"
                 >
-                  編集
-                </Link>
+                編集
+              </Link>
+
 
               {/*削除機能*/}
                 <DeleteButton id={log.id} />
