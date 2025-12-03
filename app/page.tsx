@@ -1,4 +1,6 @@
 import { supabase } from "@/lib/supabaseClient";
+import Link from "next/link"; 
+import { DeleteButton } from "@/components/DeleteButton";
 
 // Log型
 type Log = {
@@ -28,6 +30,8 @@ export default async function Home() {
     );
   }
 
+
+
   return (
     <main className="min-h-screen bg-gray-950 text-gray-50 p-6 md:p-10">
       {/*ヘッダー・追加ボタン */}
@@ -39,17 +43,10 @@ export default async function Home() {
         <button 
           className="rounded-lg bg-emerald-500 px-4 py-2 text-sm font-semibold text-white hover:bg-emerald-600 "
         >
-          新規ログ追加
+          新規ログ追加（準備中）
         </button>
       </header>
 
-      {/* JSON確認ゾーン（デバッグ用。邪魔なら後で消してOK） */}
-      <section className="mb-8">
-        <h2 className="text-lg font-semibold mb-2">生データ(JSON)</h2>
-        <pre className="bg-gray-900 text-gray-100 p-4 rounded-lg text-sm overflow-x-auto">
-          {JSON.stringify(logs, null, 2)}
-        </pre>
-      </section>
 
 
 
@@ -93,17 +90,17 @@ export default async function Home() {
               )}
               {/*ボタンエリア*/}
               <div className="mt-4 flex justify-end gap-2">
-                <button
-                  className="rounded-md border border-gray-600 px-3 py-1 text-xs text-gray-100 hover:bg-gray-700"
+              <Link
+                href={`/logs/edit?id=${log.id}`}
+                className="rounded-md border border-gray-600 px-3 py-1 text-xs text-gray-100 hover:bg-gray-700"
                 >
-                  編集
-                </button>
+                編集
+              </Link>
 
-                <button
-                  className="rounded-md bg-red-600 px-3 py-1 text-xs text-white hover:bg-red-700"
-                >
-                  削除
-                </button>
+
+              {/*削除機能*/}
+                <DeleteButton id={log.id} />
+
               </div>
             </article>
           ))}
