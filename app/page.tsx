@@ -40,11 +40,12 @@ export default async function Home() {
         筋トレログ(Supabaseから取得)
       </h1>
 
-        <button 
-          className="rounded-lg bg-emerald-500 px-4 py-2 text-sm font-semibold text-white hover:bg-emerald-600 "
+        <Link
+          href="/logs/new" 
+          className=" rounded-lg bg-emerald-500 px-4 py-3 text-sm font-semibold text-white hover:bg-emerald-600 "
         >
-          新規ログ追加（準備中）
-        </button>
+          新規ログ追加
+        </Link>
       </header>
 
 
@@ -52,7 +53,7 @@ export default async function Home() {
 
       {/* ログ一覧 UI */}
       <section>
-        <h2 className="text-lg font-semibold mb-3">ログ一覧</h2>
+        <h2 className="text-lg font-semibold mb-4">ログ一覧</h2>
 
 {/*logs が存在しない または logs が0件 のどちらかの場合、“まだログがありません” を表示する*/}
         {(!logs || logs.length === 0) && (            

@@ -24,17 +24,17 @@ export function EditLogClient() {
   const id = searchParams.get("id");      // 例: /logs/edit?id=XXXX から "XXXX" を取る
 
   // 取得したログデータ
-  const [log, setLog] = useState<Log | null>(null);        // ★★★★★
-  const [loading, setLoading] = useState(true);            // ★★★☆☆
-  const [error, setError] = useState<string | null>(null); // ★★★☆☆
+  const [log, setLog] = useState<Log | null>(null);       
+  const [loading, setLoading] = useState(true);           
+  const [error, setError] = useState<string | null>(null); 
 
   // フォーム用 state
-  const [part, setPart] = useState<string>("");         // ★★★★★
-  const [exercise, setExercise] = useState<string>(""); // ★★★★★
-  const [weight, setWeight] = useState<string>("");     // ★★★★☆
-  const [reps, setReps] = useState<string>("");         // ★★★★☆
-  const [date, setDate] = useState<string>("");         // ★★★★☆
-  const [memo, setMemo] = useState<string>("");         // ★★★★☆
+  const [part, setPart] = useState<string>("");         
+  const [exercise, setExercise] = useState<string>(""); 
+  const [weight, setWeight] = useState<string>("");     
+  const [reps, setReps] = useState<string>("");         
+  const [date, setDate] = useState<string>("");         
+  const [memo, setMemo] = useState<string>("");        
 
   // ① id があれば supabase から1件取得
   useEffect(() => {
