@@ -17,7 +17,7 @@ type Log = {
   memo: string;
 };
 
-// ページ本体（クライアントコンポーネント）
+// ページ本体（クライアントコンポーネント)
 export function EditLogClient() {
   const router = useRouter();
   const searchParams = useSearchParams(); // URLの ?id= を読むフック
