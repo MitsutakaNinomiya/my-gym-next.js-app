@@ -1,14 +1,21 @@
 "use client"
 
 import { useState } from "react";
+import { supabase } from "@/lib/supabaseClient";
+
+
 
 type SetRow = { 
     weight: string;
     reps: string;
     memo: string;
-}; 
+};
 
 export default function ExercisePage() {
+
+    //仮の値
+    const date ="2025-12-06";
+    const exerciseId = "bench_press";
 
     //初期画面状態
     const [sets, setSets] = useState<SetRow[]>([
@@ -44,14 +51,74 @@ export default function ExercisePage() {
         });
     };
 
-    const handleSave = () => {
-         // sets（4セット分の配列）から、weight と reps が両方入っている行だけを抽出
-        const filledSets = sets.filter(
-            (set) => set.weight !== "" && set.reps !== ""
-        );
-        console.log("保存するセット", filledSets);
-        alert("とりあえず保存ボタン押した！")
+    // const handleSave = () => {
+    //      // sets（4セット分の配列）から、weight と reps が両方入っている行だけを抽出
+    //     const filledSets = sets.filter(
+    //         (set) => set.weight !== "" && set.reps !== ""
+    //     );
+    //     console.log("保存するセット", filledSets);
+    //     alert("とりあえず保存ボタン押した！")
+    // } 　　↓supabaseの保存に書き換える
+const handleSave = async () => {
+  // 1. 空じゃないセットだけに絞る（フィルター）
+  const filledSets = sets.filter(
+    (set) => set.weight !== "" && set.reps !== ""
+  );
+
+  if (filledSets.length === 0) {
+    alert("保存するセットがありません（重量と回数を入力してください）");
+    return;
+  }
+
+  try { //tryを使う理由 エラーが出ても止まらないようにするため　ネット通信はいつ返ってくるか保証されてないから try(試して)catch(ダメだったら安全に処理)
+
+    // 2. その日 × その種目の既存ログを一旦全部削除
+    const { error: deleteError } = await supabase
+      .from("logs")
+      .delete()
+      .match({ date, exercise_id: exerciseId });
+
+    if (deleteError) {
+      console.error("削除エラー:", deleteError);
+      alert("既存のログの削除に失敗しました");
+      return;
     }
+
+    // 3. 画面の状態から、INSERT 用の配列を作る
+    const rows = filledSets.map((set, index) => ({
+      date,
+      exercise_id: exerciseId,
+      set_index: index + 1,
+      weight: Number(set.weight),
+      reps: Number(set.reps),
+      memo: set.memo || null,
+      // user_id: "test-user", // 将来Auth入れたら差し替え
+    }));
+
+    // 4. Supabase に INSERT
+    const { error: insertError } = await supabase
+      .from("logs")
+      .insert(rows);
+
+    if (insertError) {
+      console.error("保存エラー:", insertError);
+      alert("ログの保存に失敗しました");
+      return;
+    }
+
+    // 5. 成功！
+    alert("保存しました！（仮）");
+    console.log("保存された行:", rows);
+  } catch (e) {
+    console.error("想定外のエラー:", e);
+    alert("予期せぬエラーが発生しました");
+  }
+};
+
+
+
+
+
 
 
 

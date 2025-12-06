@@ -41,8 +41,8 @@ export default async function Home() {
       </h1>
 
         <Link
-          href="/logs/new" 
-          className=" rounded-lg bg-emerald-500 px-4 py-3 text-sm font-semibold text-white hover:bg-emerald-600 "
+          href="/logs/new"
+          className=" rounded-lg bg-emerald-500 px-4 py-3 text-sm font-semibold text-white hover:bg-emerald-600"
         >
           新規ログ追加
         </Link>
