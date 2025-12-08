@@ -14,13 +14,15 @@ type LogRow = {
   memo: string | null;
 };
 
-// Dynamic Route用の props 型
+// Dynamic Route用の props 型  これはタダのTypeScriptが文句言わないためだけの説明書にすぎない。
 type DailyLogsPageProps = {
   params: {
     date: string; // URL の [date] 部分がここに入る
   };
 };
 
+
+//ここに直接NextjsがURLで[date]で判断してくれて params: {date: "2025-12-08",} のオブジェクトを持ってきてくれる 
 export default async function DailyLogsPage({ params }: DailyLogsPageProps) {
   const { date } = params; // ← URLの /logs/xxxx から日付を取得 ★4
 
