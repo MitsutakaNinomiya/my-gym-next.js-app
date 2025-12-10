@@ -2,8 +2,10 @@
 
 import { supabase } from "@/lib/supabaseClient";
 import Link from "next/link";
-import { AddSetForm } from "./AddSetForm"; // ← 追加 ★3
+import { AddSetForm } from "./AddSetForm";
+import { EditSetRow } from "./EditSetRow";
 
+// 1セット分の型
 type LogRow = {
   id: string;
   date: string;
@@ -14,18 +16,16 @@ type LogRow = {
   memo: string | null;
 };
 
-type ExerciseLogsPageProps = {
-  params: {
-    date: string;
-    exerciseId: string;
-  };
-};
-
+// params は Promise で来るので await が必要
 export default async function ExerciseLogsPage({
   params,
-}: ExerciseLogsPageProps) {
-  const { date, exerciseId } = params;
+}: {
+  params: Promise<{ date: string; exerciseId: string }>;
+}) {
+  // URL から日付と種目IDを取り出す
+  const { date, exerciseId } = await params;
 
+  // ① 今日のこの種目のログを取得
   const { data, error } = await supabase
     .from("logs")
     .select("*")
@@ -46,8 +46,32 @@ export default async function ExerciseLogsPage({
 
   const logs: LogRow[] = (data ?? []) as LogRow[];
 
-  // 次に追加するセット番号（1,2,3...）★3
+  // 次に追加するセット番号（1,2,3...）
   const nextSetIndex = logs.length + 1;
+
+  // ② 前回の記録（Last Record）用に過去ログを取得
+  const { data: pastData, error: pastError } = await supabase
+    .from("logs")
+    .select("*")
+    .eq("exercise_id", exerciseId) // 同じ種目
+    .lt("date", date) // 今日より前の日付だけ（lt = less than = より小さい）
+    .order("date", { ascending: false }) // 日付の新しい順
+    .order("set_index", { ascending: true }); // 同じ日の中ではセット順
+
+  if (pastError) {
+    console.error("LastRecord取得エラー:", pastError);
+  }
+
+  const pastLogs: LogRow[] = (pastData ?? []) as LogRow[];
+
+  // 一番新しい「過去の日付」を特定
+  let lastDate: string | null = null;
+  let lastLogs: LogRow[] = [];
+
+  if (pastLogs.length > 0) {
+    lastDate = pastLogs[0].date; // 一番新しい日付
+    lastLogs = pastLogs.filter((row) => row.date === lastDate);
+  }
 
   return (
     <main className="min-h-screen bg-gray-950 text-gray-50 p-6 md:p-10">
@@ -70,37 +94,48 @@ export default async function ExerciseLogsPage({
         </Link>
       </header>
 
-      {/* ログがない場合 */}
+      {/* ③ Last Record（前回の記録） */}
+      {lastLogs.length > 0 && lastDate && (
+        <section className="mb-6">
+          <h2 className="text-sm font-semibold mb-1">Last Record</h2>
+          <p className="text-xs text-gray-400 mb-1">{lastDate}</p>
+          <p className="text-sm">
+            {lastLogs.map((row, index) => (
+              <span key={row.id}>
+                {row.weight}kg × {row.reps}回
+                {index !== lastLogs.length - 1 && " / "}
+              </span>
+            ))}
+          </p>
+        </section>
+      )}
+
+      {/* 今日のログがない場合 */}
       {logs.length === 0 && (
-        <p className="text-sm text-gray-400">
-          まだこの種目の記録はありません。
+        <p className="text-sm text-gray-400 mb-2">
+          まだこの日の記録はありません。
         </p>
       )}
 
-      {/* セット一覧 */}
+      {/* 今日のセット一覧（編集付き） */}
       {logs.length > 0 && (
-        <section className="mt-4 space-y-2">
+        <section className="mt-2 space-y-2">
           <ul className="space-y-1 text-sm">
             {logs.map((row) => (
-              <li
+              <EditSetRow
                 key={row.id}
-                className="rounded-lg border border-gray-800 bg-gray-900/70 px-4 py-2"
-              >
-                <div>
-                  セット {row.set_index}: {row.weight}kg × {row.reps}回
-                </div>
-                {row.memo && (
-                  <div className="text-xs text-gray-300 mt-1">
-                    メモ: {row.memo}
-                  </div>
-                )}
-              </li>
+                id={row.id}
+                setIndex={row.set_index}
+                defaultWeight={row.weight}
+                defaultReps={row.reps}
+                defaultMemo={row.memo}
+              />
             ))}
           </ul>
         </section>
       )}
 
-      {/* セット追加フォームをここに表示 */}
+      {/* セット追加フォーム */}
       <AddSetForm
         date={date}
         exerciseId={exerciseId}
