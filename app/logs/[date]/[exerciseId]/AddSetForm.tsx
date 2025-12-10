@@ -27,7 +27,7 @@ export function AddSetForm({ date, exerciseId, nextSetIndex }: AddSetFormProps) 
   // フォーム送信時の処理 ★4
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault(); // 画面のリロードを防ぐ（HTMLフォームのデフォ動作を止める）
-
+  console.log("DEBUG AddSetForm props:", { date, exerciseId, nextSetIndex });
     // 入力チェック（必要最低限）
     if (!weight || !reps) {
       setErrorMessage("重さと回数は必須です。");
@@ -49,7 +49,7 @@ export function AddSetForm({ date, exerciseId, nextSetIndex }: AddSetFormProps) 
       reps: repsValue,
       memo: memo || null,
     });
-
+ 
     if (error) {
       console.error(error);
       setErrorMessage("保存に失敗しました。");
