@@ -71,7 +71,7 @@ export function AddSetForm({ date, exerciseId, nextSetIndex }: AddSetFormProps) 
 
     
     <form onSubmit={handleSubmit} className="mt-6 space-y-3">
-      <h2 className="text-sm font-semibold">セットを追加</h2>
+      <h2 className="text-sm font-semibold">-------------------------------------------------------------------------</h2>
 
       <div className="flex gap-3">
         <div className="flex-1">

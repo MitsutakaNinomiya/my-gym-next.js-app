@@ -1,16 +1,14 @@
-
-
-//要理解
+// app/logs/[date]/select/page.tsx
 
 import Link from "next/link";
 
-// 種目の型（何となくでもOK）★3
+// 種目の型（何となくでもOK）
 type Exercise = {
   id: string;      // "bench_press" など
   name: string;    // 日本語名
 };
 
-// ひとまず固定の種目リスト ★2（ほぼコピペでOK）
+// ひとまず固定の種目リスト
 const EXERCISES: Exercise[] = [
   { id: "bench_press", name: "ベンチプレス" },
   { id: "squat", name: "スクワット" },
@@ -18,14 +16,20 @@ const EXERCISES: Exercise[] = [
   { id: "lat_pull_down", name: "ラットプルダウン" },
 ];
 
+// propsの型定義
 type SelectExercisePageProps = {
-  params: {
-    date: string; // /logs/[date]/select の [date] 部分 ★3
-  };
+  // ⬅ ここを「Promise 付き」にする
+  params: Promise<{
+    date: string;
+  }>;
 };
 
-export default function SelectExercisePage({ params }: SelectExercisePageProps) {
-  const { date } = params; // URL から日付を受け取る ★3（さっきの復習）
+// ⬅ 関数を async にして…
+export default async function SelectExercisePage(
+  props: SelectExercisePageProps
+) {
+  // ⬅ await で中身を取り出す
+  const { date } = await props.params;
 
   return (
     <main className="min-h-screen bg-gray-950 text-gray-50 p-6 md:p-10">
@@ -42,7 +46,7 @@ export default function SelectExercisePage({ params }: SelectExercisePageProps) 
         {EXERCISES.map((ex) => (
           <Link
             key={ex.id}
-            href={`/logs/${date}/${ex.id}`} // ← 次に作る「種目ごとの入力ページ」へ ★4
+            href={`/logs/${date}/${ex.id}`}
             className="block rounded-lg border border-gray-800 bg-gray-900/70 px-4 py-3 text-sm hover:border-emerald-500"
           >
             {ex.name}
@@ -50,7 +54,7 @@ export default function SelectExercisePage({ params }: SelectExercisePageProps) 
         ))}
       </section>
 
-      {/* 戻るリンク（任意） */}
+      {/* 戻るリンク */}
       <div className="mt-6">
         <Link
           href={`/logs/${date}`}

@@ -71,9 +71,9 @@ export default async function DailyLogsPage({ params }: {
         {/* いったんトップへのリンク（あとでカレンダーに差し替え可） */}
         <Link
           href="/"
-          className="text-xs text-gray-300 underline underline-offset-2"
+          className="text-m text-gray-300  underline-offset-2 rounded   hover:bg-emerald-600"
         >
-          カレンダーへ戻る（仮）
+          戻る
         </Link>
       </header>
 

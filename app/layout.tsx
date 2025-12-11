@@ -25,12 +25,8 @@ export default function RootLayout({
 
             {/* ナビゲーション */}
             <nav className="flex gap-4 text-sm">
-              <Link href="/" className="hover:text-sky-400">
-                今日の記録
-              </Link>
-              <Link href="/history" className="hover:text-sky-400">
-                履歴
-              </Link>
+
+
             </nav>
           </div>
         </header>
