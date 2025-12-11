@@ -1,102 +1,126 @@
+// app/calendar/page.tsx
+
 import Link from "next/link";
 
-// 日付を "2025-12-07" みたいな文字列にする関数
-// format = 形式・形を整える という意味
-function formatDate(date: Date): string {
-  const year = date.getFullYear();
-  const month = String(date.getMonth() + 1).padStart(2, "0");
-  const day = String(date.getDate()).padStart(2, "0");
-  return `${year}-${month}-${day}`;
-}
+// 1日分の日付情報の型
+type DayCell = {
+  dateStr: string;  // "2025-12-11" みたいな文字
+  day: number;      // 日にち（1〜31）
+  isToday: boolean; // 今日かどうか
+};
 
-// カレンダー用にマス目(日付)を作る関数
-// build = 組み立てる / cells = マス
-function buildCalendarCells(year: number, month: number): (Date | null)[] {
-  const monthIndex = month - 1; // Date の月は 0始まりなので -1 して使う
-  const firstDay = new Date(year, monthIndex, 1); // その月の1日
-  const firstWeekday = firstDay.getDay(); // 曜日(0=日, 1=月, ... 6=土)
-  const daysInMonth = new Date(year, monthIndex + 1, 0).getDate(); // その月の日数
-
-  const cells: (Date | null)[] = [];
-
-  // ① 1日が始まるまでの「空白マス(null)」を入れる
-  for (let i = 0; i < firstWeekday; i++) {
-    cells.push(null);
-  }
-
-  // ② 1日〜月末までの日付を入れる
-  for (let day = 1; day <= daysInMonth; day++) {
-    cells.push(new Date(year, monthIndex, day));
-  }
-
-  // ③ 最後の行が7の倍数になるように、余ったところを空白で埋める
-  while (cells.length % 7 !== 0) {
-    cells.push(null);
-  }
-
-  return cells;
-}
-
+// カレンダーページ本体
 export default function CalendarPage() {
-  // 今日
   const today = new Date();
   const year = today.getFullYear();
-  const month = today.getMonth() + 1;
+  const month = today.getMonth(); // 0:1月, 11:12月
 
-  // カレンダーマスを作る
-  const cells = buildCalendarCells(year, month);
-  const weekLabels = ["日", "月", "火", "水", "木", "金", "土"];
+  // 月初（1日）
+  const firstDay = new Date(year, month, 1);
+  // 月末の日付（28〜31）
+  const lastDay = new Date(year, month + 1, 0);
+
+  // 月初の曜日（0:日〜6:土）
+  const startWeekday = firstDay.getDay();
+  const totalDays = lastDay.getDate();
+
+  const days: (DayCell | null)[] = [];
+
+  // 1週目の「前の月の空白」部分
+  for (let i = 0; i < startWeekday; i++) {
+    days.push(null);
+  }
+
+  // 今月の日付を埋める
+  for (let d = 1; d <= totalDays; d++) {
+    const dateObj = new Date(year, month, d);
+
+    const yyyy = dateObj.getFullYear();
+    const mm = String(dateObj.getMonth() + 1).padStart(2, "0");
+    const dd = String(dateObj.getDate()).padStart(2, "0");
+    const dateStr = `${yyyy}-${mm}-${dd}`;
+
+    const isToday =
+      d === today.getDate() &&
+      dateObj.getMonth() === today.getMonth() &&
+      dateObj.getFullYear() === today.getFullYear();
+
+    days.push({
+      dateStr,
+      day: d,
+      isToday,
+    });
+  }
+
+  // 7日ごとに配列を切る（週ごとに分ける）
+  const weeks: (DayCell | null)[][] = [];
+  for (let i = 0; i < days.length; i += 7) {
+    weeks.push(days.slice(i, i + 7));
+  }
 
   return (
     <main className="min-h-screen bg-gray-950 text-gray-50 p-6 md:p-10">
-      <h1 className="text-2xl font-bold mb-4">
-        {year}年 {month}月 のカレンダー
-      </h1>
+      <header className="mb-6">
+        <h1 className="text-2xl font-bold mb-1">
+          {year}年 {month + 1}月 カレンダー
+        </h1>
+        <p className="text-xs text-gray-400">
+          日付をタップすると、その日の種目選択画面へ移動します。
+        </p>
+      </header>
 
-      <p className="text-sm text-gray-400 mb-4">
-        日付をタップすると、その日のログページ（/logs/YYYY-MM-DD）へ移動します。
-      </p>
+      <section className="bg-gray-900/70 rounded-xl border border-gray-800 p-4">
+        {/* 曜日ヘッダー */}
+        <div className="grid grid-cols-7 text-center text-xs text-gray-400 mb-2">
+          <div>日</div>
+          <div>月</div>
+          <div>火</div>
+          <div>水</div>
+          <div>木</div>
+          <div>金</div>
+          <div>土</div>
+        </div>
 
-      {/* 曜日ヘッダー */}
-      <div className="grid grid-cols-7 gap-2 mb-2 text-center text-xs text-gray-400">
-        {weekLabels.map((label) => (
-          <div key={label}>{label}</div>
-        ))}
-      </div>
+        {/* 日付マス */}
+        <div className="space-y-1">
+          {weeks.map((week, wIndex) => (
+            <div key={wIndex} className="grid grid-cols-7 gap-1">
+              {week.map((cell, cIndex) => {
+                if (!cell) {
+                  // 前月や次月の空白
+                  return (
+                    <div
+                      key={cIndex}
+                      className="h-10 rounded-md bg-transparent"
+                    />
+                  );
+                }
 
-      {/* 日付マス（7列グリッド） */}
-      <div className="grid grid-cols-7 gap-2 text-sm">
-        {cells.map((date, index) => {
-          if (!date) {
-            // 空白マス
-            return (
-              <div
-                key={index}
-                className="h-12 rounded-md border border-gray-800 bg-gray-900/40"
-              />
-            );
-          }
+                const baseClass =
+                  "h-10 flex items-center justify-center rounded-md text-sm border";
+                const todayClass = cell.isToday
+                  ? "bg-emerald-600 text-white border-emerald-400 font-bold"
+                  : "bg-gray-800/80 text-gray-100 border-gray-700 hover:border-emerald-500";
 
-          const dateStr = formatDate(date); // "2025-12-07"
-          const isToday =
-            formatDate(date) === formatDate(today); // 今日かどうか判定用
+                return (
+                  <Link
+                    key={cIndex}
+                    href={`/logs/${cell.dateStr}/select`}
+                    className={`${baseClass} ${todayClass}`}
+                  >
+                    {cell.day}
+                  </Link>
+                );
+              })}
+            </div>
+          ))}
+        </div>
+      </section>
 
-          return (
-            <Link
-              key={index}
-              href={`/logs/${dateStr}`}
-              className={[
-                "h-12 rounded-md border flex items-center justify-center",
-                "transition-colors",
-                isToday
-                  ? "border-emerald-400 bg-emerald-500/20 text-emerald-100"
-                  : "border-gray-700 bg-gray-900/70 hover:bg-gray-800",
-              ].join(" ")}
-            >
-              {date.getDate()}
-            </Link>
-          );
-        })}
+      <div className="mt-4">
+        <Link href="/" className="text-xs text-gray-300 underline">
+          ホームに戻る
+        </Link>
       </div>
     </main>
   );

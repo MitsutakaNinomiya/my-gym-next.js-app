@@ -146,10 +146,7 @@ export default async function ExerciseLogsPage({
       )}
 
       {/* 今日のトータルボリューム */}
-<section className="mt-4 mb-6">
-  <h2 className="text-sm font-semibold mb-1">Total Volume</h2>
-  <p className="text-lg font-bold text-emerald-400">{totalVolume} kg</p>
-</section>
+
 
       
 
