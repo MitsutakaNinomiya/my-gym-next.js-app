@@ -73,6 +73,10 @@ export default async function ExerciseLogsPage({
     lastLogs = pastLogs.filter((row) => row.date === lastDate);
   }
 
+  const totalVolume = logs.reduce((sum, row) => { 
+    return sum + row.weight * row.reps;
+  }, 0);
+
   return (
     <main className="min-h-screen bg-gray-950 text-gray-50 p-6 md:p-10">
       {/* ヘッダー */}
@@ -109,13 +113,19 @@ export default async function ExerciseLogsPage({
           </p>
         </section>
       )}
+      
 
-      {/* 今日のログがない場合 */}
-      {logs.length === 0 && (
-        <p className="text-sm text-gray-400 mb-2">
-          まだこの日の記録はありません。
-        </p>
-      )}
+            {/* セット追加フォーム */}
+      <AddSetForm
+      
+        date={date}
+        exerciseId={exerciseId}
+        nextSetIndex={nextSetIndex}
+      />
+
+
+      
+      
 
       {/* 今日のセット一覧（編集付き） */}
       {logs.length > 0 && (
@@ -135,12 +145,22 @@ export default async function ExerciseLogsPage({
         </section>
       )}
 
-      {/* セット追加フォーム */}
-      <AddSetForm
-        date={date}
-        exerciseId={exerciseId}
-        nextSetIndex={nextSetIndex}
-      />
+      {/* 今日のトータルボリューム */}
+<section className="mt-4 mb-6">
+  <h2 className="text-sm font-semibold mb-1">Total Volume</h2>
+  <p className="text-lg font-bold text-emerald-400">{totalVolume} kg</p>
+</section>
+
+      
+
+            {/* 今日のログがない場合 */}
+      {logs.length === 0 && (
+        <p className="text-sm text-gray-400 mb-2">
+          まだこの日の記録はありません。
+        </p>
+      )}
+
+
     </main>
   );
 }
