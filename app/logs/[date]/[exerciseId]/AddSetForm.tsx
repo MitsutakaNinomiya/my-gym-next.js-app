@@ -68,6 +68,8 @@ export function AddSetForm({ date, exerciseId, nextSetIndex }: AddSetFormProps) 
   };
 
   return (
+
+    
     <form onSubmit={handleSubmit} className="mt-6 space-y-3">
       <h2 className="text-sm font-semibold">セットを追加</h2>
 
@@ -108,6 +110,9 @@ export function AddSetForm({ date, exerciseId, nextSetIndex }: AddSetFormProps) 
           className="w-full rounded-md bg-gray-900 border border-gray-700 px-3 py-2 text-sm"
         />
       </div>
+      
+
+      
 
       {errorMessage && (
         <p className="text-xs text-red-400">{errorMessage}</p>
