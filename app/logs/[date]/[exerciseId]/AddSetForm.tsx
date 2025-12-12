@@ -16,7 +16,7 @@ type AddSetFormProps = {
 export function AddSetForm({ date, exerciseId, nextSetIndex }: AddSetFormProps) {
   const router = useRouter(); // ページの再読み込み用（router = ルーター、道案内役）★2
 
-  // 入力中の値を持っておく state（ステート = 状態）★4
+  // 入力中の値を持っておく state（ステート = 状態）
   const [weight, setWeight] = useState(""); // 重さ
   const [reps, setReps] = useState("");     // 回数
   const [memo, setMemo] = useState("");     // メモ
@@ -24,7 +24,7 @@ export function AddSetForm({ date, exerciseId, nextSetIndex }: AddSetFormProps) 
   const [isSubmitting, setIsSubmitting] = useState(false); // 送信中フラグ
   const [errorMessage, setErrorMessage] = useState("");    // エラー表示用
 
-  // フォーム送信時の処理 ★4
+  // フォーム送信時の処理 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault(); // 画面のリロードを防ぐ（HTMLフォームのデフォ動作を止める）
   console.log("DEBUG AddSetForm props:", { date, exerciseId, nextSetIndex });

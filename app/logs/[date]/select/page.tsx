@@ -11,9 +11,12 @@ type Exercise = {
 // ひとまず固定の種目リスト
 const EXERCISES: Exercise[] = [
   { id: "bench_press", name: "ベンチプレス" },
-  { id: "squat", name: "スクワット" },
-  { id: "deadlift", name: "デッドリフト" },
+  { id: "bulgarian_squat", name: "ブルガリアンスクワット" },
   { id: "lat_pull_down", name: "ラットプルダウン" },
+  { id: "lying_extension", name: "ライイングエクステンション" },
+  { id: "EZ_bar_curl", name: "EZバーカール" },
+  { id: "deadlift", name: "デッドリフト" },
+
 ];
 
 // propsの型定義
@@ -55,10 +58,10 @@ export default async function SelectExercisePage(
       </section>
 
       {/* 戻るリンク */}
-      <div className="mt-6">
+      <div>
         <Link
           href={`/logs/${date}`}
-          className="text-xs text-gray-300 underline underline-offset-2"
+          className="text-xs text-gray-300 underline underline-offset-2  ml-10"
         >
           {date} のログ一覧に戻る
         </Link>

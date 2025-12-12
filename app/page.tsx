@@ -1,5 +1,6 @@
 // app/calendar/page.tsx
 
+import { supabase } from "@/lib/supabaseClient"; //serverCompornentじゃないとsupabaseから取り出せない
 import Link from "next/link";
 
 // 1日分の日付情報の型
@@ -10,7 +11,19 @@ type DayCell = {
 };
 
 // カレンダーページ本体
-export default function CalendarPage() {
+export default async function CalendarPage() {
+
+    const { data , error } = await supabase 
+    .from("logs")
+    .select("date");
+
+    const markedSet = new Set(
+      (data ?? []).map((row) => String(row.date).slice(0,10))
+    );
+
+   
+
+
   const today = new Date();
   const year = today.getFullYear();
   const month = today.getMonth(); // 0:1月, 11:12月
@@ -58,6 +71,9 @@ export default function CalendarPage() {
     weeks.push(days.slice(i, i + 7));
   }
 
+
+
+  
   return (
     <main className="min-h-screen bg-gray-950 text-gray-50 p-6 md:p-10">
       <header className="mb-6">
@@ -68,6 +84,7 @@ export default function CalendarPage() {
           日付をタップすると、その日の種目選択画面へ移動します。
         </p>
       </header>
+
 
       <section className="bg-gray-900/70 rounded-xl border border-gray-800 p-4">
         {/* 曜日ヘッダー */}
@@ -96,19 +113,24 @@ export default function CalendarPage() {
                   );
                 }
 
+
                 const baseClass =
                   "h-10 flex items-center justify-center rounded-md text-sm border";
                 const todayClass = cell.isToday
                   ? "bg-emerald-600 text-white border-emerald-400 font-bold"
                   : "bg-gray-800/80 text-gray-100 border-gray-700 hover:border-emerald-500";
 
+                
+                const hasLog = markedSet.has(cell.dateStr);
                 return (
                   <Link
                     key={cIndex}
                     href={`/logs/${cell.dateStr}/select`}
-                    className={`${baseClass} ${todayClass}`}
+                    className={`${baseClass} ${todayClass} flex-col group`}
                   >
-                    {cell.day}
+                    <div>{cell.day}</div>
+                    {hasLog && <div className="text-[10px] leading-none mt-0.5 text-gray-400
+                  group-hover:text-emerald-400">●</div>}
                   </Link>
                 );
               })}
@@ -117,11 +139,6 @@ export default function CalendarPage() {
         </div>
       </section>
 
-      <div className="mt-4">
-        <Link href="/" className="text-xs text-gray-300 underline">
-          ホームに戻る
-        </Link>
-      </div>
     </main>
   );
 }

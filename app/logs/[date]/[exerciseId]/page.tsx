@@ -83,7 +83,7 @@ export default async function ExerciseLogsPage({
       <header className="mb-6 flex items-center justify-between">
         <div>
           <h1 className="text-2xl font-bold mb-1">
-            {date} の {exerciseId} ログ
+            {date}  {exerciseId} 
           </h1>
           <p className="text-xs text-gray-400">
             この日付の、この種目のセット一覧です。
