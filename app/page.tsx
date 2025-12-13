@@ -1,4 +1,4 @@
-// app/calendar/page.tsx
+// app/page.tsx
 import { supabase } from "@/lib/supabaseClient";
 import Link from "next/link";
 
@@ -12,12 +12,12 @@ type DayCell = {
 // カレンダーページ本体
 export default async function CalendarPage() {
 
-
-
-  const { data, error } = await supabase.from("logs").select("date");
+  const { data, error } = await supabase
+  .from("logs")
+  .select("date");
   // ここ追加：YYYY-MM-DDに揃える
-  const markedSet = new Set(
-    (data ?? []).map((row) => String(row.date).slice(0, 10))
+  const markedSet = new Set( 
+    (data ?? []).map((row) => String(row.date).slice(0, 10)) //日付を"YYYY-MM-DD"に揃え、比較するため
   );
 
   const today = new Date();
@@ -71,7 +71,7 @@ export default async function CalendarPage() {
     <main className="min-h-screen bg-gray-950 text-gray-50 p-6 md:p-10">
       <header className="mb-6">
         <h1 className="text-2xl font-bold mb-1">
-          {year}年 {month + 1}月 カレンダー
+          {year}年 {month + 1}月 筋トレ 記録 
         </h1>
         <p className="text-xs text-gray-400">
           日付をタップすると、その日の種目選択画面へ移動します。
@@ -129,11 +129,7 @@ export default async function CalendarPage() {
         </div>
       </section>
 
-      <div className="mt-4">
-        <Link href="/" className="text-xs text-gray-300 underline">
-          ホームに戻る
-        </Link>
-      </div>
+
     </main>
   );
 }
