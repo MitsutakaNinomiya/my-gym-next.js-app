@@ -1,5 +1,5 @@
 // app/calendar/page.tsx
-
+import { supabase } from "@/lib/supabaseClient";
 import Link from "next/link";
 
 // 1日分の日付情報の型
@@ -10,7 +10,16 @@ type DayCell = {
 };
 
 // カレンダーページ本体
-export default function CalendarPage() {
+export default async function CalendarPage() {
+
+
+
+  const { data, error } = await supabase.from("logs").select("date");
+  // ここ追加：YYYY-MM-DDに揃える
+  const markedSet = new Set(
+    (data ?? []).map((row) => String(row.date).slice(0, 10))
+  );
+
   const today = new Date();
   const year = today.getFullYear();
   const month = today.getMonth(); // 0:1月, 11:12月
@@ -102,13 +111,16 @@ export default function CalendarPage() {
                   ? "bg-emerald-600 text-white border-emerald-400 font-bold"
                   : "bg-gray-800/80 text-gray-100 border-gray-700 hover:border-emerald-500";
 
+
+                  const hasLog =markedSet.has(cell.dateStr);
                 return (
                   <Link
                     key={cIndex}
                     href={`/logs/${cell.dateStr}/select`}
-                    className={`${baseClass} ${todayClass}`}
+                    className={`${baseClass} ${todayClass} `}
                   >
-                    {cell.day}
+                    <div>{cell.day}</div>
+                    {hasLog && <div className = "text-[10px] mt-0.5">●</div>}
                   </Link>
                 );
               })}
