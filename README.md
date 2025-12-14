@@ -12,6 +12,18 @@
 ---
 
 ## 🧱 画面構成 / ルーティング
+/
+→app/page.tsx(カレンダー) 
+
+/logs/2025-12-14
+→ app/logs/[date]/page.tsx
+
+/logs/2025-12-14/select
+→ app/logs/[date]/select/page.tsx（種目選択）
+
+/logs/2025-12-14/bench_press
+→ app/logs/[date]/[exerciseId]/page.tsx
+
 
 ### `/` ホーム（カレンダー画面）
 

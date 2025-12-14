@@ -1,5 +1,5 @@
-// app/CalendarClient.tsx
-"use client";
+//ユーザーが必ず日付選択するのでクライアントコンポーネント宣言 
+"use client"; 
 
 import { Calendar } from "react-calendar";
 import "react-calendar/dist/Calendar.css";
