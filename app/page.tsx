@@ -1,135 +1,21 @@
 // app/page.tsx
 import { supabase } from "@/lib/supabaseClient";
-import Link from "next/link";
+import CalendarClient from "./CalendarClient";
 
-// 1日分の日付情報の型
-type DayCell = {
-  dateStr: string;  // "2025-12-11" みたいな文字
-  day: number;      // 日にち（1〜31）
-  isToday: boolean; // 今日かどうか
-};
-
-// カレンダーページ本体
-export default async function CalendarPage() {
-
-  const { data, error } = await supabase
-  .from("logs")
-  .select("date");
-  // ここ追加：YYYY-MM-DDに揃える
-  const markedSet = new Set( 
-    (data ?? []).map((row) => String(row.date).slice(0, 10)) //日付を"YYYY-MM-DD"に揃え、比較するため
-  );
-
-  const today = new Date();
-  const year = today.getFullYear();
-  const month = today.getMonth(); // 0:1月, 11:12月
-
-  // 月初（1日）
-  const firstDay = new Date(year, month, 1);
-  // 月末の日付（28〜31）
-  const lastDay = new Date(year, month + 1, 0);
-
-  // 月初の曜日（0:日〜6:土）
-  const startWeekday = firstDay.getDay();
-  const totalDays = lastDay.getDate();
-
-  const days: (DayCell | null)[] = [];
-
-  // 1週目の「前の月の空白」部分
-  for (let i = 0; i < startWeekday; i++) {
-    days.push(null);
+export default async function Page() {
+  const { data, error } = await supabase.from("logs").select("date");
+  if (error) {
+    return <div className="p-6">取得エラー</div>;
   }
 
-  // 今月の日付を埋める
-  for (let d = 1; d <= totalDays; d++) {
-    const dateObj = new Date(year, month, d);
-
-    const yyyy = dateObj.getFullYear();
-    const mm = String(dateObj.getMonth() + 1).padStart(2, "0");
-    const dd = String(dateObj.getDate()).padStart(2, "0");
-    const dateStr = `${yyyy}-${mm}-${dd}`;
-
-    const isToday =
-      d === today.getDate() &&
-      dateObj.getMonth() === today.getMonth() &&
-      dateObj.getFullYear() === today.getFullYear();
-
-    days.push({
-      dateStr,
-      day: d,
-      isToday,
-    });
-  }
-
-  // 7日ごとに配列を切る（週ごとに分ける）
-  const weeks: (DayCell | null)[][] = [];
-  for (let i = 0; i < days.length; i += 7) {
-    weeks.push(days.slice(i, i + 7));
-  }
+  const markedDates = (data ?? []).map((row) => String(row.date).slice(0, 10));
 
   return (
     <main className="min-h-screen bg-gray-950 text-gray-50 p-6 md:p-10">
-      <header className="mb-6">
-        <h1 className="text-2xl font-bold mb-1">
-          {year}年 {month + 1}月 筋トレ 記録 
-        </h1>
-        <p className="text-xs text-gray-400">
-          日付をタップすると、その日の種目選択画面へ移動します。
-        </p>
-      </header>
-
-      <section className="bg-gray-900/70 rounded-xl border border-gray-800 p-4">
-        {/* 曜日ヘッダー */}
-        <div className="grid grid-cols-7 text-center text-xs text-gray-400 mb-2">
-          <div>日</div>
-          <div>月</div>
-          <div>火</div>
-          <div>水</div>
-          <div>木</div>
-          <div>金</div>
-          <div>土</div>
-        </div>
-
-        {/* 日付マス */}
-        <div className="space-y-1">
-          {weeks.map((week, wIndex) => (
-            <div key={wIndex} className="grid grid-cols-7 gap-1">
-              {week.map((cell, cIndex) => {
-                if (!cell) {
-                  // 前月や次月の空白
-                  return (
-                    <div
-                      key={cIndex}
-                      className="h-10 rounded-md bg-transparent"
-                    />
-                  );
-                }
-
-                const baseClass =
-                  "h-10 flex items-center justify-center rounded-md text-sm border";
-                const todayClass = cell.isToday
-                  ? "bg-emerald-600 text-white border-emerald-400 font-bold"
-                  : "bg-gray-800/80 text-gray-100 border-gray-700 hover:border-emerald-500";
-
-
-                  const hasLog =markedSet.has(cell.dateStr);
-                return (
-                  <Link
-                    key={cIndex}
-                    href={`/logs/${cell.dateStr}/select`}
-                    className={`${baseClass} ${todayClass} `}
-                  >
-                    <div>{cell.day}</div>
-                    {hasLog && <div className = "text-[10px] mt-0.5">●</div>}
-                  </Link>
-                );
-              })}
-            </div>
-          ))}
-        </div>
-      </section>
-
-
+      <h1 className="text-2xl font-bold mb-4">筋トレLog App</h1>
+      <div className="mx-auto max-w-md">
+  <CalendarClient markedDates={markedDates} />
+</div>
     </main>
   );
 }

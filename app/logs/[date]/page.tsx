@@ -62,7 +62,7 @@ export default async function DailyLogsPage({ params }: {
       {/* ヘッダー */}
       <header className="mb-6 flex items-center justify-between">
         <div>
-          <h1 className="text-2xl font-bold mb-1">{date} の筋トレログ</h1>
+          <h1 className="text-2xl font-bold mb-1">{date} </h1>
           <p className="text-xs text-gray-400">
             この日に記録した種目とセットの一覧です。
           </p>
@@ -71,9 +71,16 @@ export default async function DailyLogsPage({ params }: {
         {/* いったんトップへのリンク（あとでカレンダーに差し替え可） */}
         <Link
           href="/"
-          className="text-m text-gray-300  underline-offset-2 rounded   hover:bg-emerald-600"
+          className="inline-flex items-center gap-1.5
+    rounded-md
+    border border-emerald-500/40
+    bg-emerald-900/30 px-3 py-1.5
+    text-xs font-medium text-emerald-200
+    hover:bg-emerald-800/40
+    active:scale-95
+    transition"
         >
-          戻る
+          ← 戻る
         </Link>
       </header>
 
@@ -114,9 +121,16 @@ export default async function DailyLogsPage({ params }: {
             <div className="mt-3 text-right">
               <Link
                 href={`/logs/${date}/${exerciseId}`}
-                className="text-xs text-emerald-400 underline underline-offset-2"
+                className="inline-flex items-center gap-1.5
+                  rounded-md
+                  border border-emerald-500/40
+                  bg-emerald-900/30 px-3 py-1.5
+                  text-xs font-medium text-emerald-200
+                  hover:bg-emerald-800/40
+                  active:scale-95
+                  transition"
               >
-                この種目を編集する（仮リンク）
+                この種目を編集する
               </Link>
             </div>
           </article>

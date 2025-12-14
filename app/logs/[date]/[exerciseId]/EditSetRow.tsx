@@ -66,7 +66,7 @@ export function EditSetRow({
     router.refresh();
   };
 
-  // 🟢 表示モード
+  //  表示モード
   if (!isEditing) {
     return (
       <li className="rounded-lg border border-gray-800 bg-gray-900/70 px-4 py-2 flex items-center justify-between gap-3">
@@ -85,7 +85,14 @@ export function EditSetRow({
           <button
             type="button"
             onClick={() => setIsEditing(true)}
-            className="text-xs text-emerald-400 hover:text-emerald-300"
+            className="inline-flex items-center gap-1.5
+              rounded-md
+              border border-emerald-500/40
+              bg-emerald-900/30 px-3 py-1.5
+              text-xs font-medium text-emerald-200
+              hover:bg-emerald-800/40
+              active:scale-95
+              transition"
           >
             編集
           </button>
