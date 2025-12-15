@@ -18,8 +18,8 @@ const EXERCISES: Exercise[] = [
 
 // propsの型定義
 type SelectExercisePageProps = {
-  // ⬅ ここを「Promise 付き」にする
-  params: Promise<{
+  
+  params: Promise<{ // ⬅ ここ「Promise 付き」
     date: string;
   }>;
 };

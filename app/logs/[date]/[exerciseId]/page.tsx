@@ -124,7 +124,6 @@ export default async function ExerciseLogsPage({
 
             {/* セット追加フォーム */}
       <AddSetForm
-      
         date={date}
         exerciseId={exerciseId}
         nextSetIndex={nextSetIndex}

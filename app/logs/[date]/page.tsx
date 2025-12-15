@@ -139,7 +139,7 @@ export default async function DailyLogsPage({ params }: {
 
       {/* 右下の＋ボタン（種目追加用・今はリンク先だけ用意） */}
       <Link
-        href={`/logs/${date}/select`} // ← まだページがなくてもOK。あとで作る。
+        href={`/logs/${date}/select`} 
         className="fixed bottom-6 right-6 flex h-12 w-12 items-center justify-center rounded-full bg-emerald-500 text-2xl font-bold text-white shadow-lg hover:bg-emerald-600"
       >
         +
