@@ -1,17 +1,194 @@
-# My Gym Next v2
+<div id="top"></div>
+My Gym Next
 
-筋トレの記録を「日付 × 種目 × セット」で管理するための Web アプリです。  
-カレンダーから日付を選び、その日ごとのトレーニング種目とセット内容を素早く記録できます。
+筋トレの記録を 「日付 × 種目 × セット（重量・回数・メモ）」 で管理する Web アプリです。
+カレンダーから日付を選び、その日のトレーニング内容を素早く記録できます。
 
-## 🎯 コンセプト
+使用技術一覧
+<p style="display: inline"> <img src="https://img.shields.io/badge/-Node.js-000000.svg?logo=node.js&style=for-the-badge"> <img src="https://img.shields.io/badge/-TypeScript-000000.svg?logo=typescript&style=for-the-badge"> <img src="https://img.shields.io/badge/-React-20232A?style=for-the-badge&logo=react&logoColor=61DAFB"> <img src="https://img.shields.io/badge/-Next.js-000000.svg?logo=next.js&style=for-the-badge"> <img src="https://img.shields.io/badge/-TailwindCSS-000000.svg?logo=tailwindcss&style=for-the-badge"> <img src="https://img.shields.io/badge/-Supabase-000000.svg?logo=supabase&style=for-the-badge"> <img src="https://img.shields.io/badge/-Vercel-000000.svg?logo=vercel&style=for-the-badge"> </p> <p align="right">(<a href="#top">トップへ</a>)</p>
+目次
 
-- カレンダー中心の筋トレログアプリ
+プロジェクトについて
+
+主な機能
+
+画面構成--ルーティング
+
+ディレクトリ構成
+
+データモデルsupabase
+
+開発環境構築
+
+トラブルシューティング
+
+<p align="right">(<a href="#top">トップへ</a>)</p>
+プロジェクトについて
+
+コンセプト
+
+カレンダー中心で「いつトレーニングしたか」が一目で分かる
+
+日付ベースで「どの種目を・どれくらい」やったかを管理
+
+Last Record（前回記録） を見ながら前回の自分と比較できる
+
+<p align="right">(<a href="#top">トップへ</a>)</p>
+主な機能
+
+月カレンダー表示（トレーニング日マーク表示）
+
+日付ごとのログ一覧（種目ごとにグルーピング）
+
+種目選択 → セット追加（重量 / 回数 / メモ）
+
+セットの編集・削除
+
+同種目の直近記録（Last Record）の表示
+
+<p align="right">(<a href="#top">トップへ</a>)</p>
+画面構成 / ルーティング
+/                         → app/page.tsx（カレンダー）
+/logs/[date]              → app/logs/[date]/page.tsx（日別ログ一覧）
+/logs/[date]/select       → app/logs/[date]/select/page.tsx（種目選択）
+/logs/[date]/[exerciseId] → app/logs/[date]/[exerciseId]/page.tsx（種目別ログ）
+
+ホーム（カレンダー） /
+
+日付をクリックすると日別ログへ遷移 → /logs/[date]
+
+ログがある日にはマーク（●）を表示
+
+日別ログ /logs/[date]
+
+その日の記録を種目単位で表示
+
+右下の「＋」から種目選択へ → /logs/[date]/select
+
+種目選択 /logs/[date]/select
+
+種目を選ぶと種目別ログへ → /logs/[date]/[exerciseId]
+
+種目別ログ /logs/[date]/[exerciseId]
+
+今日のセット追加・編集・削除
+
+同種目の直近記録（Last Record）を表示
+
+<p align="right">(<a href="#top">トップへ</a>)</p>
+ディレクトリ構成
+
+（例）※必要なら tree の結果に合わせて更新してください
+
+app/
+  layout.tsx
+  page.tsx
+  CalendarClient.tsx
+  logs/
+    [date]/
+      page.tsx
+      select/
+        page.tsx
+      [exerciseId]/
+        page.tsx
+        AddSetForm.tsx
+        EditSetRow.tsx
+        DeleteSetButton.tsx
+
+lib/
+  supabaseClient.ts
+
+<p align="right">(<a href="#top">トップへ</a>)</p>
+データモデル（Supabase）
+logs テーブル（1セット = 1行）
+カラム名	型	説明
+id	uuid (PK)	一意なログID
+created_at	timestamptz	作成日時
+exercise_id	text	種目ID（例：bench_press）
+set_index	int	何セット目か
+weight	numeric	重量
+reps	int	回数
+date	date	トレーニング日（例：2025-12-06）
+memo	text	メモ（任意）
+<p align="right">(<a href="#top">トップへ</a>)</p>
+開発環境構築
+1. 依存関係のインストール
+npm install
+
+2. 環境変数（Supabase）
+
+プロジェクトルートに .env.local を作成して、以下を設定します。
+
+NEXT_PUBLIC_SUPABASE_URL=xxxxxxxx
+NEXT_PUBLIC_SUPABASE_ANON_KEY=xxxxxxxx
+
+3. 起動
+npm run dev
+
+<p align="right">(<a href="#top">トップへ</a>)</p>
+トラブルシューティング
+画面が更新されない / ルーティングが変（HMR周り）
+
+開発サーバーを再起動してください
+（Next.js/Turbopackでまれに表示が古いままになることがあります）
+
+Supabase 接続エラーになる
+
+.env.local の値が入っているか確認
+
+Vercel にデプロイしている場合は Vercel の Environment Variables にも同じ値を設定
+
+Vercel で build が落ちる
+
+package-lock.json をコミットしているか確認
+
+npm install → npm run build がローカルで通るか確認
+
+<p align="right">(<a href="#top">トップへ</a>)</p>
+今後の実装予定
+
+Volume最大更新時の通知表示
+
+部位（胸・背中・脚など）で種目を分類
+
+layoutヘッダーからの画面遷移改善
+
+API Route を使ったデータ操作の整理（リファクタリング）
+
+<p align="right">(<a href="#top">トップへ</a>)</p>
+
+
+
+
+
+
+
+
+
+
+
+
+
+# My Gym
+
+My Gymは、筋トレの記録を「日付ｘ種目ｘセット（重量・回数・メモ）」で管理する
+Next.js + Supabase製のWebアプリです。
+
+カレンダーから日付を選択し、
+その日のトレーニング内容を素早く・直感的に記録出来ます。
+
+-----------------------------------------------------------------------
+
+## コンセプト
+
+- カレンダー中心でわかりやすく、操作がしやすい。
 - 「いつ・どの種目を・どれくらい」やったかを日付ベースで管理
-- 前回記録（Last Record）を見ながら、成長を意識してトレーニングできる
+- 前回記録（Last Record）を確認しながら、前回の自分と比較できる。
 
----
+-----------------------------------------------------------------------
 
-## 🧱 画面構成 / ルーティング
+## 画面構成 / ルーティング
+
 /
 →app/page.tsx(カレンダー) 
 
@@ -22,21 +199,24 @@
 → app/logs/[date]/select/page.tsx（種目選択）
 
 /logs/2025-12-14/bench_press
-→ app/logs/[date]/[exerciseId]/page.tsx
+→ app/logs/[date]/[exerciseId]/page.tsx (重量・回数・メモ 入力)
 
+-----------------------------------------------------------------------
 
-### `/` ホーム（カレンダー画面）
+### ホーム（カレンダー画面）
 
 - 月カレンダーを表示
-- トレーニングした日にマークを表示（実装予定）
+- トレーニングした日にマークを表示
 - 日付をクリックすると、その日のログ画面へ遷移  
   → `/logs/[date]`
+
+-----------------------------------------------------------------------
 
 ### `/logs/[date]` 日別ログ画面
 
 - 指定した日付のトレーニング記録一覧を表示
 - 種目ごとのカードを表示（例：ベンチプレス、ラットプルダウンなど）
-- 各カードをクリックすると、その種目の記録画面へ遷移  
+- 各カードをクリックすると、その種目の記録画面へ遷移 
   → `/logs/[date]/[exerciseId]`
 
 - 画面右下に「＋ボタン（フローティングアクションボタン）」を表示
@@ -44,17 +224,20 @@
     - 「まだ記録がありません」のメッセージ + 右下に「＋」
   - 記録がある場合：  
     - 種目カード一覧 + 右下に「＋」
-  - ＋ボタンを押すと「種目選択画面」が開く（モーダル or 別ページ）  
+  - ＋ボタンを押すと「種目選択画面」が開く
     → 種目選択後に、種目記録画面へ
 
-### `/logs/[date]/select` 種目選択画面（予定）
+-----------------------------------------------------------------------    
 
-- 部位ごとに種目カードを一覧表示
+### `/logs/[date]/select` 種目選択画面
+
   - 胸：ベンチプレス、ダンベルプレス、インクラインダンベル など
   - 背中：ラットプルダウン、ローイング など
   - 脚：スクワット、レッグプレス など
 - 種目カードをクリックすると、その日のその種目の記録画面へ遷移  
   → `/logs/[date]/[exerciseId]`
+
+-----------------------------------------------------------------------  
 
 ### `/logs/[date]/[exerciseId]` 種目記録画面（メイン機能）
 
@@ -66,27 +249,23 @@
     - 重量（weight）
     - 回数（reps）
     - メモ（memo）
-  - 入力フォームは 4行分（4セット分）をあらかじめ用意
 - 保存ボタンを押すと：
-  1. その日 × その種目の既存ログを一度すべて削除
-  2. 画面上の 4 セットのうち、「重量と回数が両方入力されている行だけ」新しく保存
-  3. 保存完了後、日別ログ画面 `/logs/[date]` に戻る
 
----
+-----------------------------------------------------------------------
+
+### 実装予定
+
+- 1セットの最大Volumeが出た場合に、「max更新中！」というログを追加する
+- 部位ごとに種目カードを一覧表示
+  - 胸を押すと、ベンチプレス、ダンベルプレス、インクラインダンベル　など種目の種類を追加する
+  - 背中：ラットプルダウン、ローイング など
+  - 脚：スクワット、レッグプレス など
+- layoutのヘッダーで画面遷移をより簡単に自在にする
+- APIをそれぞれのファイルから直接ではなく、routeを使ってコード改修をやりやすくする
+
+-----------------------------------------------------------------------
 
 ## 🗂️ データモデル（Supabase）
-
-### `exercises` テーブル（種目マスタ）
-
-筋トレ種目の一覧を管理するテーブル。
-
-| カラム名     | 型           | 説明                        |
-| ------------ | ------------ | --------------------------- |
-| id           | text (PK)    | 種目 ID (`"bench_press"` など) |
-| name         | text         | 種目名（例：ベンチプレス） |
-| part         | text         | 部位（例：胸 / 背中 / 脚） |
-| order_index  | int          | 表示順                      |
-| created_at   | timestamptz  | 作成日時                    |
 
 ### `logs` テーブル（1セット = 1行）
 
@@ -95,37 +274,17 @@
 | カラム名     | 型           | 説明                                         |
 | ------------ | ------------ | -------------------------------------------- |
 | id           | uuid (PK)    | 一意なログ ID                               |
-| date         | date         | トレーニング日（例：2025-12-06）            |
+| created_at   | timestamptz  | 作成日時                                     |
 | exercise_id  | text (FK)    | 対象種目の ID（`exercises.id`）             |
-| set_index    | int          | 何セット目か（1〜4）                         |
+| set_index    | int          | 何セット目か                      　　　　　 |
 | weight       | numeric      | 重量                                         |
 | reps         | int          | 回数                                         |
+| date         | date         | トレーニング日（例：2025-12-06）            |
 | memo         | text         | メモ（任意）                                |
-| user_id      | uuid or text | ユーザー ID（将来的に Supabase Auth と連携予定） |
-| created_at   | timestamptz  | 作成日時                                     |
-| updated_at   | timestamptz  | 更新日時                                     |
 
-**保存ルール：**
 
-- 1セット = 1レコード（1行）
-- 最大 4 セットまで保存
-- 「重量と回数のどちらか、または両方が空」のセットは保存しない
-- 保存のたびに：
-  - 対象日付 & 対象種目の既存レコードを DELETE
-  - 画面の入力内容から再度 INSERT し直す
+-----------------------------------------------------------------------
 
----
-
-## 🧩 実装メモ（種目記録画面）
-
-- `SetRow` 型で 1 セットぶんの入力を表現
-
-  ```ts
-  type SetRow = {
-    weight: string;
-    reps: string;
-    memo: string;
-  };
 
 
 
