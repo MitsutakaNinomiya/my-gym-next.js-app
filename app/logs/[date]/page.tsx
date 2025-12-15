@@ -72,13 +72,13 @@ export default async function DailyLogsPage({ params }: {
         <Link
           href="/"
           className="inline-flex items-center gap-1.5
-    rounded-md
-    border border-emerald-500/40
-    bg-emerald-900/30 px-3 py-1.5
-    text-xs font-medium text-emerald-200
-    hover:bg-emerald-800/40
-    active:scale-95
-    transition"
+            rounded-md
+            border border-emerald-500/40
+            bg-emerald-900/30 px-3 py-1.5
+            text-xs font-medium text-emerald-200
+            hover:bg-emerald-800/40
+            active:scale-95
+            transition"
         >
           ← 戻る
         </Link>

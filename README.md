@@ -1,96 +1,73 @@
 <div id="top"></div>
 My Gym Next
 
-筋トレの記録を 「日付 × 種目 × セット（重量・回数・メモ）」 で管理する Web アプリです。
-カレンダーから日付を選び、その日のトレーニング内容を素早く記録できます。
+筋トレの記録を
+「日付 × 種目 × セット（重量・回数・メモ）」
+で管理する Web アプリです。
 
-使用技術一覧
-<p style="display: inline"> <img src="https://img.shields.io/badge/-Node.js-000000.svg?logo=node.js&style=for-the-badge"> <img src="https://img.shields.io/badge/-TypeScript-000000.svg?logo=typescript&style=for-the-badge"> <img src="https://img.shields.io/badge/-React-20232A?style=for-the-badge&logo=react&logoColor=61DAFB"> <img src="https://img.shields.io/badge/-Next.js-000000.svg?logo=next.js&style=for-the-badge"> <img src="https://img.shields.io/badge/-TailwindCSS-000000.svg?logo=tailwindcss&style=for-the-badge"> <img src="https://img.shields.io/badge/-Supabase-000000.svg?logo=supabase&style=for-the-badge"> <img src="https://img.shields.io/badge/-Vercel-000000.svg?logo=vercel&style=for-the-badge"> </p> <p align="right">(<a href="#top">トップへ</a>)</p>
-目次
+カレンダーから日付を選び、
+その日のトレーニング内容をシンプルに記録できます。
 
+使用技術
+<p style="display: inline"> <img src="https://img.shields.io/badge/-Next.js-000000.svg?logo=next.js&style=for-the-badge"> <img src="https://img.shields.io/badge/-React-20232A?style=for-the-badge&logo=react&logoColor=61DAFB"> <img src="https://img.shields.io/badge/-TypeScript-000000.svg?logo=typescript&style=for-the-badge"> <img src="https://img.shields.io/badge/-TailwindCSS-000000.svg?logo=tailwindcss&style=for-the-badge"> <img src="https://img.shields.io/badge/-Supabase-000000.svg?logo=supabase&style=for-the-badge"> </p> <p align="right">(<a href="#top">トップへ</a>)</p>
 プロジェクトについて
 
-主な機能
+カレンダー中心で「いつトレーニングしたか」が分かる
 
-画面構成--ルーティング
+日付ごとに、種目とセット内容を管理できる
 
-ディレクトリ構成
+前回の記録（Last Record） を見ながら記録できる
 
-データモデルsupabase
+筋トレをしていて
+「前回どれくらい挙げてたっけ？」
+となることが多かったため作成しました。
 
-開発環境構築
 
-トラブルシューティング
 
-<p align="right">(<a href="#top">トップへ</a>)</p>
-プロジェクトについて
+実装の工夫 / 技術ポイント
 
-コンセプト
-
-カレンダー中心で「いつトレーニングしたか」が一目で分かる
-
-日付ベースで「どの種目を・どれくらい」やったかを管理
-
-Last Record（前回記録） を見ながら前回の自分と比較できる
-
-<p align="right">(<a href="#top">トップへ</a>)</p>
-主な機能
-
-月カレンダー表示（トレーニング日マーク表示）
-
-日付ごとのログ一覧（種目ごとにグルーピング）
-
-種目選択 → セット追加（重量 / 回数 / メモ）
-
-セットの編集・削除
-
-同種目の直近記録（Last Record）の表示
+ルーティング:/logs/[date]/[exerciseId] のように日付と種目でページを分け、URLだけで状態を表現した。
+データ設計：１セット＝１行で保存し、set_indexで並び順を管理
+UI：セットの追加・編集・削除をコンポーネント分割(AddSetForm/EditSetRow/DeleteSetButton)
+エラー対応：Supabase通信失敗時のエラー表示
 
 <p align="right">(<a href="#top">トップへ</a>)</p>
 画面構成 / ルーティング
-/                         → app/page.tsx（カレンダー）
-/logs/[date]              → app/logs/[date]/page.tsx（日別ログ一覧）
-/logs/[date]/select       → app/logs/[date]/select/page.tsx（種目選択）
-/logs/[date]/[exerciseId] → app/logs/[date]/[exerciseId]/page.tsx（種目別ログ）
+/                         カレンダー
+/logs/[date]              日別ログ一覧
+/logs/[date]/select       種目選択
+/logs/[date]/[exerciseId] 種目別ログ
 
-ホーム（カレンダー） /
 
-日付をクリックすると日別ログへ遷移 → /logs/[date]
+カレンダーの日付を押すと、その日のログ画面に遷移します
 
-ログがある日にはマーク（●）を表示
-
-日別ログ /logs/[date]
-
-その日の記録を種目単位で表示
-
-右下の「＋」から種目選択へ → /logs/[date]/select
-
-種目選択 /logs/[date]/select
-
-種目を選ぶと種目別ログへ → /logs/[date]/[exerciseId]
-
-種目別ログ /logs/[date]/[exerciseId]
-
-今日のセット追加・編集・削除
-
-同種目の直近記録（Last Record）を表示
+記録がない場合は「＋」から種目を選んで追加できます
 
 <p align="right">(<a href="#top">トップへ</a>)</p>
-ディレクトリ構成
+主な機能
 
-（例）※必要なら tree の結果に合わせて更新してください
+月カレンダー表示（記録がある日にマーク表示）
 
+日付ごとのトレーニングログ一覧
+
+種目ごとのセット管理（重量 / 回数 / メモ）
+
+セットの追加・編集・削除
+
+同じ種目の直近記録（Last Record）の表示
+
+<p align="right">(<a href="#top">トップへ</a>)</p>
+ディレクトリ構成（抜粋）
 app/
-  layout.tsx
-  page.tsx
+  page.tsx                # カレンダー
   CalendarClient.tsx
   logs/
     [date]/
-      page.tsx
+      page.tsx            # 日別ログ
       select/
-        page.tsx
+        page.tsx          # 種目選択
       [exerciseId]/
-        page.tsx
+        page.tsx          # 種目別ログ
         AddSetForm.tsx
         EditSetRow.tsx
         DeleteSetButton.tsx
@@ -101,191 +78,31 @@ lib/
 <p align="right">(<a href="#top">トップへ</a>)</p>
 データモデル（Supabase）
 logs テーブル（1セット = 1行）
-カラム名	型	説明
-id	uuid (PK)	一意なログID
-created_at	timestamptz	作成日時
-exercise_id	text	種目ID（例：bench_press）
-set_index	int	何セット目か
-weight	numeric	重量
-reps	int	回数
-date	date	トレーニング日（例：2025-12-06）
-memo	text	メモ（任意）
-<p align="right">(<a href="#top">トップへ</a>)</p>
-開発環境構築
-1. 依存関係のインストール
+カラム名	説明
+date	トレーニング日
+exercise_id	種目ID
+set_index	セット番号
+weight	重量
+reps	回数
+memo	メモ（任意）
+開発環境
 npm install
-
-2. 環境変数（Supabase）
-
-プロジェクトルートに .env.local を作成して、以下を設定します。
-
-NEXT_PUBLIC_SUPABASE_URL=xxxxxxxx
-NEXT_PUBLIC_SUPABASE_ANON_KEY=xxxxxxxx
-
-3. 起動
 npm run dev
 
-<p align="right">(<a href="#top">トップへ</a>)</p>
-トラブルシューティング
-画面が更新されない / ルーティングが変（HMR周り）
 
-開発サーバーを再起動してください
-（Next.js/Turbopackでまれに表示が古いままになることがあります）
+.env.local に Supabase の URL と KEY を設定しています。
 
-Supabase 接続エラーになる
+今後やりたいこと
 
-.env.local の値が入っているか確認
+現状は単一ユーザー想定（学習用）/ 今後Auth導入予定
 
-Vercel にデプロイしている場合は Vercel の Environment Variables にも同じ値を設定
+Volume が更新されたときに分かる表示
 
-Vercel で build が落ちる
+種目を部位ごとに分類
 
-package-lock.json をコミットしているか確認
-
-npm install → npm run build がローカルで通るか確認
+コード整理（API Route の利用）
 
 <p align="right">(<a href="#top">トップへ</a>)</p>
-今後の実装予定
-
-Volume最大更新時の通知表示
-
-部位（胸・背中・脚など）で種目を分類
-
-layoutヘッダーからの画面遷移改善
-
-API Route を使ったデータ操作の整理（リファクタリング）
-
-<p align="right">(<a href="#top">トップへ</a>)</p>
-
-
-
-
-
-
-
-
-
-
-
-
-
-# My Gym
-
-My Gymは、筋トレの記録を「日付ｘ種目ｘセット（重量・回数・メモ）」で管理する
-Next.js + Supabase製のWebアプリです。
-
-カレンダーから日付を選択し、
-その日のトレーニング内容を素早く・直感的に記録出来ます。
-
------------------------------------------------------------------------
-
-## コンセプト
-
-- カレンダー中心でわかりやすく、操作がしやすい。
-- 「いつ・どの種目を・どれくらい」やったかを日付ベースで管理
-- 前回記録（Last Record）を確認しながら、前回の自分と比較できる。
-
------------------------------------------------------------------------
-
-## 画面構成 / ルーティング
-
-/
-→app/page.tsx(カレンダー) 
-
-/logs/2025-12-14
-→ app/logs/[date]/page.tsx
-
-/logs/2025-12-14/select
-→ app/logs/[date]/select/page.tsx（種目選択）
-
-/logs/2025-12-14/bench_press
-→ app/logs/[date]/[exerciseId]/page.tsx (重量・回数・メモ 入力)
-
------------------------------------------------------------------------
-
-### ホーム（カレンダー画面）
-
-- 月カレンダーを表示
-- トレーニングした日にマークを表示
-- 日付をクリックすると、その日のログ画面へ遷移  
-  → `/logs/[date]`
-
------------------------------------------------------------------------
-
-### `/logs/[date]` 日別ログ画面
-
-- 指定した日付のトレーニング記録一覧を表示
-- 種目ごとのカードを表示（例：ベンチプレス、ラットプルダウンなど）
-- 各カードをクリックすると、その種目の記録画面へ遷移 
-  → `/logs/[date]/[exerciseId]`
-
-- 画面右下に「＋ボタン（フローティングアクションボタン）」を表示
-  - まだ記録がない場合：  
-    - 「まだ記録がありません」のメッセージ + 右下に「＋」
-  - 記録がある場合：  
-    - 種目カード一覧 + 右下に「＋」
-  - ＋ボタンを押すと「種目選択画面」が開く
-    → 種目選択後に、種目記録画面へ
-
------------------------------------------------------------------------    
-
-### `/logs/[date]/select` 種目選択画面
-
-  - 胸：ベンチプレス、ダンベルプレス、インクラインダンベル など
-  - 背中：ラットプルダウン、ローイング など
-  - 脚：スクワット、レッグプレス など
-- 種目カードをクリックすると、その日のその種目の記録画面へ遷移  
-  → `/logs/[date]/[exerciseId]`
-
------------------------------------------------------------------------  
-
-### `/logs/[date]/[exerciseId]` 種目記録画面（メイン機能）
-
-- 対象日付 + 対象種目の記録画面
-- 上部に「Last Record（前回記録）」を表示
-  - 同じ種目の直近の記録を表示（例：前回の日付と4セット分）
-- 「今日の記録」として 1〜4 セットぶんの入力欄を表示
-  - 1セット分の入力項目：
-    - 重量（weight）
-    - 回数（reps）
-    - メモ（memo）
-- 保存ボタンを押すと：
-
------------------------------------------------------------------------
-
-### 実装予定
-
-- 1セットの最大Volumeが出た場合に、「max更新中！」というログを追加する
-- 部位ごとに種目カードを一覧表示
-  - 胸を押すと、ベンチプレス、ダンベルプレス、インクラインダンベル　など種目の種類を追加する
-  - 背中：ラットプルダウン、ローイング など
-  - 脚：スクワット、レッグプレス など
-- layoutのヘッダーで画面遷移をより簡単に自在にする
-- APIをそれぞれのファイルから直接ではなく、routeを使ってコード改修をやりやすくする
-
------------------------------------------------------------------------
-
-## 🗂️ データモデル（Supabase）
-
-### `logs` テーブル（1セット = 1行）
-
-1セットごとのトレーニング記録を保存するテーブル。
-
-| カラム名     | 型           | 説明                                         |
-| ------------ | ------------ | -------------------------------------------- |
-| id           | uuid (PK)    | 一意なログ ID                               |
-| created_at   | timestamptz  | 作成日時                                     |
-| exercise_id  | text (FK)    | 対象種目の ID（`exercises.id`）             |
-| set_index    | int          | 何セット目か                      　　　　　 |
-| weight       | numeric      | 重量                                         |
-| reps         | int          | 回数                                         |
-| date         | date         | トレーニング日（例：2025-12-06）            |
-| memo         | text         | メモ（任意）                                |
-
-
------------------------------------------------------------------------
-
-
 
 
 

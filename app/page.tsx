@@ -3,10 +3,10 @@ import { supabase } from "@/lib/supabaseClient";
 import CalendarClient from "./CalendarClient";
 
 export default async function Page() { //サーバー側でデータ取りに行くので、async/awaitを使う
-  const { data, error } = await supabase  //supabaseは{data:"...",error:"..."} が返って来る。
+  const { data, error } = await supabase  //supabaseは{data:"...",error:"..."} が必ず返って来る。
   .from("logs")  
   .select("date"); // logsテーブルからdate列だけ取る。 select("*")にしないのは通信料やバグリスクを考えている。 必要最低限の物だけを取り出すことを意識。
-
+  console.log(supabase) 
   if (error) {
     return <div className="p-6">取得エラー</div>;
   }
@@ -15,11 +15,14 @@ export default async function Page() { //サーバー側でデータ取りに行
   const markedDates = (data ?? []).map((row) => String(row.date).slice(0, 10)); //(data ?? [])はdataがnull/undefinedであれば空配列　dataが無い時でも.mapで落ちないようにする保険
 
 
+
+
+
   return (
     <main className="min-h-screen bg-gray-950 text-gray-50 p-6 md:p-10">
       <h1 className="text-2xl font-bold mb-4">筋トレLog App</h1>
         <div className="mx-auto max-w-md">
-          <CalendarClient markedDates={markedDates} />
+          <CalendarClient markedDates={markedDates} /> 
         </div>
     </main>
   );
