@@ -3,23 +3,23 @@
 import { supabase } from "@/lib/supabaseClient";
 import Link from "next/link";
 
-// 1セット=1行 のログの型
+// ログ１行分の型定義
 type LogRow = {
   id: string;
   date: string;
-  exercise_id: string; // ベンチプレスなどの種目ID
-  set_index: number;   // 何セット目か（1〜4）
+  exercise_id: string; 
+  set_index: number;   //何セット目か
   weight: number;
   reps: number;
   memo: string | null;
 };
 
 
-//ここに直接NextjsがURLで[date]で判断してくれて params: {date: "2025-12-08",} のオブジェクトを持ってきてくれる 
-export default async function DailyLogsPage({ params }: { 
-  params: Promise<{date: string}>;
+// URLに含まれる[date]パラメータをparamsが受け取り、ページ内で使えるようにする 
+export default async function DailyLogsPage({ params }: {  // paramsはどこから来る？ → Next.jsのルーティング機能によって、自動的に渡される。 
+  params: Promise<{date: string}>; // URLパラメータの型定義  
 }) { 
-  const { date } = await params;
+  const { date } = await params; // URLパラメータから日付を取得　awaitはpromise[非同期処理]が解決するのを待つため
 
   // Supabase からこの日付のログを全部取得
   const { data: logs, error } = await supabase
@@ -30,7 +30,7 @@ export default async function DailyLogsPage({ params }: {
     .order("set_index", { ascending: true });
 
   if (error) {
-    // エラー時の表示
+    console.error("ログ取得エラー:", error);
     return (
       <main className="min-h-screen bg-gray-950 text-gray-50 p-6 md:p-10">
         <h1 className="text-2xl font-bold mb-4">{date} の筋トレログ</h1>
@@ -41,21 +41,23 @@ export default async function DailyLogsPage({ params }: {
     );
   }
 
-  // logs が null のときに備えて空配列にしておく
-  const safeLogs: LogRow[] = (logs ?? []) as LogRow[];
-
-  // 種目ごとにグループ分けする（exercise_id 単位でまとめる）★5
-  const grouped: Record<string, LogRow[]> = {};
-  safeLogs.forEach((log) => {
-    if (!grouped[log.exercise_id]) {
-      grouped[log.exercise_id] = [];
+  // supabaseで取得したlogsがnull/undefinedの場合でも落ちないように、logs ?? [] で空配列を代入する
+  const safeLogs: LogRow[] = (logs ?? []) as LogRow[]; //logs ?? [] は、logsがnullまたはundefinedの場合に空配列[]を代わりに使う。 as LogRow[] は型アサーションで、safeLogsがLogRow型の配列であることをTypeScriptに伝える。
+console.log("取得したlog", safeLogs);
+  // 種目ごとにグループ分けする（exercise_id 単位でまとめる）
+  const grouped: Record<string, LogRow[]> = {}; // Record<キーの型, 値の型> は、キーがstring型で値がLogRow型の配列であるオブジェクトを表す　
+  safeLogs.forEach((log) => {                   // ↑ キーとしてexercise_idを使うのでstring型 何故キーがexercise_id？ → 種目ごとにまとめたいから
+    if (!grouped[log.exercise_id]) {  
+      grouped[log.exercise_id] = []; // まだその種目がなければ空配列を作成
     }
-    grouped[log.exercise_id].push(log);
-  });
+    grouped[log.exercise_id].push(log); // その種目の配列にログ行を追加
+  }); 
 
-  // オブジェクト -> [ [exercise_id, LogRow[]], ... ] に変換
-  const entries = Object.entries(grouped);
-  // entries = [ ["bench_press", [LogRow, LogRow...]], ["lat_pull_down", [...]], ... ]
+  // オブジェクト  [ [exercise_id, LogRow[]], ... ] に変換 Object.entries()は静的メソッドで、与えられたobjectが所有する、文字列をキーとするすべての列挙可能なプロパティのキーと値のペアを配列の形で返す。
+  const entries = Object.entries(grouped);  // key: exercise_id, value: LogRow[][] (LogRow配列の配列)に変換
+  // entries: groupedオブジェクトの各キーと値のペアを配列の形で取得する。
+  // [ ["bench_press", [LogRow, LogRow...]], ["lat_pull_down", [...]], ... ]
+
 
   return (
     <main className="min-h-screen bg-gray-950 text-gray-50 p-6 md:p-10">
@@ -64,7 +66,7 @@ export default async function DailyLogsPage({ params }: {
         <div>
           <h1 className="text-2xl font-bold mb-1">{date} </h1>
           <p className="text-xs text-gray-400">
-            この日に記録した種目とセットの一覧です。
+            この日に記録した種目とセットの一覧です。 
           </p>
         </div>
 
@@ -91,7 +93,7 @@ export default async function DailyLogsPage({ params }: {
         </p>
       )}
 
-      {/* 種目ごとのカード一覧 */}
+      {/* 種目ごとのカード一覧 */} 
       <section className="mt-4 space-y-4">
         {entries.map(([exerciseId, rows]) => (
           <article
