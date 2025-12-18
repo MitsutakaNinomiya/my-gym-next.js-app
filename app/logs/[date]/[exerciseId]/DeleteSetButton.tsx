@@ -21,11 +21,11 @@ type DeleteSetButtonProps = {
       setIsDeleting(true);
 
       //supabaseの中には { data, error } が返ってくるが、今回はdataは不要なので取り出していない
-      const { error } = await supabase
+      const { error } = await supabase  
       .from("logs")
       .delete()
       .eq("id", id);
-
+      
       //errorに値が入っていれば削除失敗
       if (error) {  
       console.error(error);
@@ -41,7 +41,7 @@ type DeleteSetButtonProps = {
     <button
       type="button"
       onClick={handleDelete}
-      disabled={isDeleting}
+      disabled={isDeleting} //削除中はボタンを無効化しバグ防止
       className="ml-3 rounded-md bg-red-600 px-3 py-1 text-xs font-semibold text-white hover:bg-red-500 disabled:opacity-50"
     >
       {isDeleting ? "削除中..." : "削除"}

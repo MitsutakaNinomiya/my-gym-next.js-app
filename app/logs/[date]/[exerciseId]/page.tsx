@@ -132,7 +132,7 @@ export default async function ExerciseLogsPage({params,}: { //page.tsxは Next.j
       
 
       {/* 今日のセット一覧（編集付き） */}
-      {logs.length > 0 && (
+      {logs.length > 0 && ( //今日のログが1件以上ある場合に表示
         <section className="mt-2 space-y-2">
           <ul className="space-y-1 text-sm">
             {logs.map((row) => (

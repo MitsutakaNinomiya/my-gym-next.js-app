@@ -25,12 +25,12 @@ export function AddSetForm({ date, exerciseId, nextSetIndex }: AddSetFormProps) 
   const [errorMessage, setErrorMessage] = useState("");    // エラー表示用
 
   // フォーム送信時の処理 
-  const handleSubmit = async (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => { //クライアントサーバーなので コンポーネント内の関数にasync
      e.preventDefault(); // 画面のリロードを防ぐ　　　 formのonSubmitで必要　
-  console.log("DEBUG AddSetForm props:", { date, exerciseId, nextSetIndex });
+  console.log("DEBUG AddSetForm props:", { date, exerciseId, nextSetIndex }); // デバッグ用
     // 入力チェック（必要最低限）
-    if (!weight || !reps) {
-      setErrorMessage("重さと回数は必須です。");
+    if (!weight || !reps) { //重さまたは回数が空欄の場合
+      setErrorMessage("重さと回数は必須です。"); 
       return;
     }
 
@@ -40,17 +40,19 @@ export function AddSetForm({ date, exerciseId, nextSetIndex }: AddSetFormProps) 
     const weightValue = Number(weight);
     const repsValue = Number(reps);
 
-    // Supabase に1行追加する 
-    const { error } = await supabase.from("logs").insert({
+    // Supabase に1行追加する 　クライアントサーバーなのでsupabaseにデータを送ることしかできない
+    const { error } = await supabase //追加後のデータを使わないので、{ data, error } ではなく　{ error } だけ受け取る
+    .from("logs")
+    .insert({
       date,                 // URLからもらった日付
       exercise_id: exerciseId, // URLからもらった種目ID
-      set_index: nextSetIndex, // 何セット目か
-      weight: weightValue,
-      reps: repsValue,
-      memo: memo || null,
+      set_index: nextSetIndex, // URLからもらった次のセット番号
+      weight: weightValue,  //左辺がlogsテーブルのカラム名、右辺が上で定義した変数
+      reps: repsValue, 
+      memo: memo || null, //空文字列の場合はnullとして保存
     });
  
-    if (error) {
+    if (error) { //追加に失敗したときは、errorに情報が入る
       console.error(error);
       setErrorMessage("保存に失敗しました。");
       setIsSubmitting(false);
@@ -62,21 +64,21 @@ export function AddSetForm({ date, exerciseId, nextSetIndex }: AddSetFormProps) 
     setReps("");
     setMemo("");
 
-    // サーバー側のデータを取り直す（画面を最新にする）★3
-    router.refresh();
-    setIsSubmitting(false);
+    // サーバー側のデータを取り直す（画面を最新にする）
+    router.refresh();     
+    setIsSubmitting(false);     
   };
 
   return (
 
-    
-    <form onSubmit={handleSubmit} className="mt-6 space-y-3">  {/*form*/}
+    //formの中の各inputをすべてhandleSubmitでまとめて処理する
+    <form onSubmit={handleSubmit} className="mt-6 space-y-3">  
       <h2 className="text-sm font-semibold">-------------------------------------------------------------------------</h2>
 
-      <div className="flex gap-3">
-        <div className="flex-1">
-          <label className="block text-xs text-gray-400 mb-1">
-            重さ (kg)
+      <div className="flex gap-3"> 
+        <div className="flex-1"> 
+          <label className="block text-xs text-gray-400 mb-1"> 
+            重さ (kg) 
           </label>
           <input
             type="number"
@@ -114,7 +116,7 @@ export function AddSetForm({ date, exerciseId, nextSetIndex }: AddSetFormProps) 
 
       
 
-      {errorMessage && (
+      {errorMessage && ( //setErrorMessageがtrueの場合に表示
         <p className="text-xs text-red-400">{errorMessage}</p>
       )}
 
