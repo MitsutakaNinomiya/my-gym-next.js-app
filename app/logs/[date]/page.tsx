@@ -43,7 +43,7 @@ export default async function DailyLogsPage({ params }: {  // paramsはどこか
 
   // supabaseで取得したlogsがnull/undefinedの場合でも落ちないように、logs ?? [] で空配列を代入する
   const safeLogs: LogRow[] = (logs ?? []) as LogRow[]; //logs ?? [] は、logsがnullまたはundefinedの場合に空配列[]を代わりに使う。 as LogRow[] は型アサーションで、safeLogsがLogRow型の配列であることをTypeScriptに伝える。
-console.log("取得したlog", safeLogs);
+
   // 種目ごとにグループ分けする（exercise_id 単位でまとめる）
   const grouped: Record<string, LogRow[]> = {}; // Record<キーの型, 値の型> は、キーがstring型で値がLogRow型の配列であるオブジェクトを表す　
   safeLogs.forEach((log) => {                   // ↑ キーとしてexercise_idを使うのでstring型 何故キーがexercise_id？ → 種目ごとにまとめたいから
@@ -53,7 +53,7 @@ console.log("取得したlog", safeLogs);
     grouped[log.exercise_id].push(log); // その種目の配列にログ行を追加
   }); 
 
-  // オブジェクト  [ [exercise_id, LogRow[]], ... ] に変換 Object.entries()は静的メソッドで、与えられたobjectが所有する、文字列をキーとするすべての列挙可能なプロパティのキーと値のペアを配列の形で返す。
+  // オブジェクト  [ [exercise_id, LogRow[]], ... ] に変換. Object.entries()は静的メソッドで、与えられたobjectが所有する、文字列をキーとするすべての列挙可能なプロパティのキーと値のペアを配列の形で返す。
   const entries = Object.entries(grouped);  // key: exercise_id, value: LogRow[][] (LogRow配列の配列)に変換
   // entries: groupedオブジェクトの各キーと値のペアを配列の形で取得する。
   // [ ["bench_press", [LogRow, LogRow...]], ["lat_pull_down", [...]], ... ]
@@ -70,7 +70,7 @@ console.log("取得したlog", safeLogs);
           </p>
         </div>
 
-        {/* いったんトップへのリンク（あとでカレンダーに差し替え可） */}
+        {/*トップへのリンク */}
         <Link
           href="/"
           className="inline-flex items-center gap-1.5
@@ -95,12 +95,12 @@ console.log("取得したlog", safeLogs);
 
       {/* 種目ごとのカード一覧 */} 
       <section className="mt-4 space-y-4">
-        {entries.map(([exerciseId, rows]) => (
+        {entries.map(([exerciseId, rows]) => ( // rowsはその種目のLogRow配列 [bench_press, [row1, row2,...]←これがrows]
           <article
             key={exerciseId}
             className="rounded-xl border border-gray-800 bg-gray-900/70 p-4 shadow"
           >
-            {/* 種目名部分：今は exercise_id をそのまま表示（あとで日本語名にしてもOK） */}
+            {/* 種目名部分 */}
             <h2 className="text-base font-semibold mb-2">
               種目: {exerciseId}
             </h2>
@@ -109,8 +109,8 @@ console.log("取得したlog", safeLogs);
             <ul className="space-y-1 text-sm">
               {rows.map((row) => (
                 <li key={row.id}>
-                  {row.set_index}. {row.weight}kg × {row.reps}回
-                  {row.memo && (
+                  {row.set_index}. {row.weight}kg × {row.reps}回 
+                  {row.memo && (  //&&(): それがtrueの場合に次の部分を処理する。　
                     <span className="text-xs text-gray-300 ml-2">
                       （{row.memo}）
                     </span>
@@ -122,7 +122,7 @@ console.log("取得したlog", safeLogs);
             {/* 種目記録画面へのリンク（あとで本物のURLに差し替える） */}
             <div className="mt-3 text-right">
               <Link
-                href={`/logs/${date}/${exerciseId}`}
+                href={`/logs/${date}/${exerciseId}`} // 本物のURLに差し替え
                 className="inline-flex items-center gap-1.5
                   rounded-md
                   border border-emerald-500/40
@@ -139,8 +139,7 @@ console.log("取得したlog", safeLogs);
         ))}
       </section>
 
-      {/* 右下の＋ボタン（種目追加用・今はリンク先だけ用意） */}
-      <Link
+      <Link 
         href={`/logs/${date}/select`} 
         className="fixed bottom-6 right-6 flex h-12 w-12 items-center justify-center rounded-full bg-emerald-500 text-2xl font-bold text-white shadow-lg hover:bg-emerald-600"
       >

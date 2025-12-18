@@ -14,9 +14,9 @@ type AddSetFormProps = {
 };
 
 export function AddSetForm({ date, exerciseId, nextSetIndex }: AddSetFormProps) {
-  const router = useRouter(); // ページの再読み込み用（router = ルーター、道案内役）★2
+  const router = useRouter(); 
 
-  // 入力中の値を持っておく state（ステート = 状態）★4
+  // 入力中の値を持っておく state（ステート = 状態）
   const [weight, setWeight] = useState(""); // 重さ
   const [reps, setReps] = useState("");     // 回数
   const [memo, setMemo] = useState("");     // メモ
@@ -24,9 +24,9 @@ export function AddSetForm({ date, exerciseId, nextSetIndex }: AddSetFormProps) 
   const [isSubmitting, setIsSubmitting] = useState(false); // 送信中フラグ
   const [errorMessage, setErrorMessage] = useState("");    // エラー表示用
 
-  // フォーム送信時の処理 ★4
+  // フォーム送信時の処理 
   const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault(); // 画面のリロードを防ぐ（HTMLフォームのデフォ動作を止める）
+     e.preventDefault(); // 画面のリロードを防ぐ　　　 formのonSubmitで必要　
   console.log("DEBUG AddSetForm props:", { date, exerciseId, nextSetIndex });
     // 入力チェック（必要最低限）
     if (!weight || !reps) {
@@ -40,7 +40,7 @@ export function AddSetForm({ date, exerciseId, nextSetIndex }: AddSetFormProps) 
     const weightValue = Number(weight);
     const repsValue = Number(reps);
 
-    // Supabase に1行追加する ★5
+    // Supabase に1行追加する 
     const { error } = await supabase.from("logs").insert({
       date,                 // URLからもらった日付
       exercise_id: exerciseId, // URLからもらった種目ID
@@ -70,7 +70,7 @@ export function AddSetForm({ date, exerciseId, nextSetIndex }: AddSetFormProps) 
   return (
 
     
-    <form onSubmit={handleSubmit} className="mt-6 space-y-3">
+    <form onSubmit={handleSubmit} className="mt-6 space-y-3">  {/*form*/}
       <h2 className="text-sm font-semibold">-------------------------------------------------------------------------</h2>
 
       <div className="flex gap-3">

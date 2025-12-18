@@ -16,14 +16,12 @@ type LogRow = {
   memo: string | null;
 };
 
-// params は Promise で来るので await が必要
-export default async function ExerciseLogsPage({
-  params,
-}: {
+// params は Promise　で来るので await が必要　　
+export default async function ExerciseLogsPage({params,}: { //page.tsxは Next.jsの仕様でdefault export　が必須
   params: Promise<{ date: string; exerciseId: string }>;
 }) {
-  // URL から日付と種目IDを取り出す
-  const { date, exerciseId } = await params;
+  // URLパラメータ取得し、date と exerciseId に分解 　　paramsの中身は　{ date: string; exerciseId: string }　
+  const { date, exerciseId} = await params;
 
   // ① 今日のこの種目のログを取得
   const { data, error } = await supabase
@@ -65,8 +63,8 @@ export default async function ExerciseLogsPage({
   const pastLogs: LogRow[] = (pastData ?? []) as LogRow[];
 
   // 一番新しい「過去の日付」を特定
-  let lastDate: string | null = null;
-  let lastLogs: LogRow[] = [];
+  let lastDate: string | null = null; // null可能性ありとすることで、まだ過去ログがない場合でもバグが発生しないようにする
+  let lastLogs: LogRow[] = [];  // lastDateの日付ログだけを入れる配列　　//let は後に値が変更する可能性があるので、constではなくletで宣言
 
   if (pastLogs.length > 0) {
     lastDate = pastLogs[0].date; // 一番新しい日付
@@ -106,7 +104,7 @@ export default async function ExerciseLogsPage({
       </header>
 
       {/* ③ Last Record（前回の記録） */}
-      {lastLogs.length > 0 && lastDate && (
+      {lastLogs.length > 0 && lastDate && ( // lastLogsが空でなく、lastDateがnullでない場合に表示
         <section className="mb-6">
           <h2 className="text-sm font-semibold mb-1">Last Record</h2>
           <p className="text-xs text-gray-400 mb-1">{lastDate}</p>

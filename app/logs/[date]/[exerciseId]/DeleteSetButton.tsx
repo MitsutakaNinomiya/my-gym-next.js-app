@@ -7,32 +7,34 @@ import { useRouter } from "next/navigation";
 import { useState } from "react";
 
 type DeleteSetButtonProps = {
-  id: string; // 消したいログ行の id
+  id: string; 
 };
 
-export function DeleteSetButton({ id }: DeleteSetButtonProps) {
-  const router = useRouter();
-  const [isDeleting, setIsDeleting] = useState(false);
+// export defaultが必要なのは page.tsx layout.tsx など　next.jsが特別扱いするファイルのみ。その他のコンポーネントはnamed exportでOK
+  export function  DeleteSetButton({ id }: DeleteSetButtonProps) {  //クライアントコンポーネント本体をasyncにするのは不可。　
+    const router = useRouter(); 
+    const [isDeleting, setIsDeleting] = useState(false);  // 削除：削除中... の状態管理
 
-  const handleDelete = async () => {
-    if (!confirm("このセットを削除しますか？")) return;
+    const handleDelete = async () => {    //コンポーネント内の関数をasyncにするのはOK
+      if (!confirm("このセットを削除しますか？")) return;  //確認ダイアログでキャンセル押されたら終了、OKなら削除処理へ。
 
-    setIsDeleting(true);
+      setIsDeleting(true);
 
-    const { error } = await supabase
-    .from("logs")
-    .delete()
-    .eq("id", id);
+      //supabaseの中には { data, error } が返ってくるが、今回はdataは不要なので取り出していない
+      const { error } = await supabase
+      .from("logs")
+      .delete()
+      .eq("id", id);
 
-    if (error) {
-      console.error("削除エラー:", error);
-      alert("削除に失敗しました");
+      //errorに値が入っていれば削除失敗
+      if (error) {  
+      console.error(error);
+      alert("削除に失敗しました。");
       setIsDeleting(false);
-      return;
-    }
+      }
 
-    // 画面を最新の状態に更新
-    router.refresh();
+      //errorに値が入っていない場合には削除成功なので画面更新
+      router.refresh(); 
   };
 
   return (
