@@ -5,15 +5,18 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { supabase } from "@/lib/supabaseClient";
+import { spawn } from "child_process";
+import { Span } from "next/dist/trace";
 
 // Props（プロップス）型：親から渡してもらう値の説明書 ★2〜3
 type AddSetFormProps = {
   date: string;          // どの日付のログか
   exerciseId: string;    // どの種目のログか
   nextSetIndex: number;  // 何セット目として登録するか（例: 1, 2, 3...）
+  totalVolume: number;
 };
 
-export function AddSetForm({ date, exerciseId, nextSetIndex }: AddSetFormProps) {
+export function AddSetForm({ date, exerciseId, nextSetIndex , totalVolume}: AddSetFormProps) {
   const router = useRouter(); 
 
   // 入力中の値を持っておく state（ステート = 状態）
@@ -59,6 +62,9 @@ export function AddSetForm({ date, exerciseId, nextSetIndex }: AddSetFormProps) 
       return;
     }
 
+
+    
+
     // 入力をリセット
     setWeight("");
     setReps("");
@@ -68,6 +74,13 @@ export function AddSetForm({ date, exerciseId, nextSetIndex }: AddSetFormProps) 
     router.refresh();     
     setIsSubmitting(false);     
   };
+
+  
+  
+
+  
+
+  
 
   return (
 
@@ -120,13 +133,27 @@ export function AddSetForm({ date, exerciseId, nextSetIndex }: AddSetFormProps) 
         <p className="text-xs text-red-400">{errorMessage}</p>
       )}
 
-      <button
+    <div className="flex item-center gap-3">
+       <button
         type="submit"
         disabled={isSubmitting}
-        className="rounded-md bg-emerald-500 px-4 py-2 text-xs font-semibold text-white hover:bg-emerald-600 disabled:opacity-50"
-      >
+        className="rounded-md mr-5 bg-emerald-500 px-4 py-2 text-xs font-semibold text-white hover:bg-emerald-600 disabled:opacity-50"
+       >
         {isSubmitting ? "保存中..." : `${nextSetIndex}セット目を保存`}
-      </button>
+       </button>
+
+       {/* <span className="rounded-md  text-xs border-emerald-500/40 bg-emerald-900/30 px-4 py-2 font-semibold text-emerald-200">
+        TotalVolume : {totalVolume !== 0 ? totalVolume : null}  これの書き方だと totalVolumeが０のとき [totalVolume:"" ] と表示される　*/} 
+      {totalVolume !== 0 &&  
+        <span className="rounded-md  text-xs border-emerald-500/40 bg-emerald-900/30 px-4 py-2 font-semibold text-emerald-200">
+          TotalVolume: {totalVolume}
+        </span>}
+
+    </div>  
+    
+      
+        
+      
     </form>
   );
 }

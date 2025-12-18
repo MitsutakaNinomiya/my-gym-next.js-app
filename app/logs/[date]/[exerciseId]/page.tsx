@@ -17,19 +17,23 @@ type LogRow = {
 };
 
 // params は Promise　で来るので await が必要　　
-export default async function ExerciseLogsPage({params,}: { //page.tsxは Next.jsの仕様でdefault export　が必須
+export default async function ExerciseLogsPage({ params }: { //page.tsxは Next.jsの仕様でdefault export　が必須
   params: Promise<{ date: string; exerciseId: string }>;
 }) {
   // URLパラメータ取得し、date と exerciseId に分解 　　paramsの中身は　{ date: string; exerciseId: string }　
   const { date, exerciseId} = await params;
 
-  // ① 今日のこの種目のログを取得
+  // 今日のこの種目のログを取得
   const { data, error } = await supabase
     .from("logs")
     .select("*")
     .eq("date", date)
     .eq("exercise_id", exerciseId)
     .order("set_index", { ascending: true });
+
+  
+
+  
 
   if (error) {
     return (
@@ -43,6 +47,10 @@ export default async function ExerciseLogsPage({params,}: { //page.tsxは Next.j
   }
 
   const logs: LogRow[] = (data ?? []) as LogRow[];
+
+  //合計ボリューム　reduceの初期値が0になるので、
+  const totalVolume = logs.reduce((sum,row) => sum + row.weight*row.reps,0);
+
 
   // 次に追加するセット番号（1,2,3...）
   const nextSetIndex = logs.length + 1;
@@ -71,9 +79,6 @@ export default async function ExerciseLogsPage({params,}: { //page.tsxは Next.j
     lastLogs = pastLogs.filter((row) => row.date === lastDate);
   }
 
-  const totalVolume = logs.reduce((sum, row) => { 
-    return sum + row.weight * row.reps;
-  }, 0);
 
   return (
     <main className="min-h-screen bg-gray-950 text-gray-50 p-6 md:p-10">
@@ -125,6 +130,7 @@ export default async function ExerciseLogsPage({params,}: { //page.tsxは Next.j
         date={date}
         exerciseId={exerciseId}
         nextSetIndex={nextSetIndex}
+        totalVolume= {totalVolume}
       />
 
 
@@ -149,7 +155,10 @@ export default async function ExerciseLogsPage({params,}: { //page.tsxは Next.j
         </section>
       )}
 
-      {/* 今日のトータルボリューム */}
+      
+    
+      
+      
 
 
       
