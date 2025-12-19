@@ -25,11 +25,19 @@ export default function RootLayout({
 
             {/* ナビゲーション */}
             <nav className="flex gap-4 text-sm">
+              <Link
+              href={`/`}
+              >
+                カレンダー
+              </Link>
 
 
             </nav>
           </div>
         </header>
+
+
+
 
         {/* 各ページの中身がここに入る */}
         <main className="min-h-screen">

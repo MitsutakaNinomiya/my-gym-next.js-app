@@ -5,8 +5,6 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { supabase } from "@/lib/supabaseClient";
-import { spawn } from "child_process";
-import { Span } from "next/dist/trace";
 
 // Props（プロップス）型：親から渡してもらう値の説明書 ★2〜3
 type AddSetFormProps = {
