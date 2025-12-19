@@ -7,7 +7,7 @@ import Link from "next/link";
 type LogRow = {
   id: string;
   date: string;
-  exercise_id: string; 
+  exercise_id: string;
   set_index: number;   //何セット目か
   weight: number;
   reps: number;
@@ -122,7 +122,7 @@ export default async function DailyLogsPage({ params }: {  // paramsはどこか
             {/* 種目記録画面へのリンク（あとで本物のURLに差し替える） */}
             <div className="mt-3 text-right">
               <Link
-                href={`/logs/${date}/${exerciseId}`} // 本物のURLに差し替え
+                href={`/logs/${date}/${exerciseId}`} 
                 className="inline-flex items-center gap-1.5
                   rounded-md
                   border border-emerald-500/40
