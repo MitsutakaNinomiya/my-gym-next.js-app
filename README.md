@@ -60,7 +60,7 @@
 ## データモデル（Supabase）
 logs テーブル（1セット = 1行）
 
-| カラム名 | 説明 |
+| カラム名 | 説明 | 
 |---|---|
 | date | トレーニング日 |
 | exercise_id | 種目ID |
@@ -75,6 +75,11 @@ logs テーブル（1セット = 1行）
 ```bash
 npm install
 npm run dev
+
+
+
+
+---
 
 
 
