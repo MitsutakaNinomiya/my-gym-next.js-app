@@ -1,15 +1,31 @@
 <div id="top"></div>
 My Gym Next
 
+
 筋トレの記録を
 「日付 × 種目 × セット（重量・回数・メモ）」
 で管理する Web アプリです。
-
 カレンダーから日付を選び、
 その日のトレーニング内容をシンプルに記録できます。
+- Demo: 
+- GitHub: https://github.com/MitsutakaNinomiya/my-gym-next.js-app
 
 使用技術
 <p style="display: inline"> <img src="https://img.shields.io/badge/-Next.js-000000.svg?logo=next.js&style=for-the-badge"> <img src="https://img.shields.io/badge/-React-20232A?style=for-the-badge&logo=react&logoColor=61DAFB"> <img src="https://img.shields.io/badge/-TypeScript-000000.svg?logo=typescript&style=for-the-badge"> <img src="https://img.shields.io/badge/-TailwindCSS-000000.svg?logo=tailwindcss&style=for-the-badge"> <img src="https://img.shields.io/badge/-Supabase-000000.svg?logo=supabase&style=for-the-badge"> </p> <p align="right">(<a href="#top">トップへ</a>)</p>
+
+
+## Screenshots
+
+### Calendar
+![Screen](docs/screenshots/calendar.png)
+
+### Daily Logs（日付ごとのログ一覧）
+![Screen](docs/screenshots/date.png)
+
+### Exercise Detail（セット管理）
+![Screen](docs/screenshots/date-exercise.png)
+
+
 プロジェクトについて
 
 カレンダー中心で「いつトレーニングしたか」が分かる
