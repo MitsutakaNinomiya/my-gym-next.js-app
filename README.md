@@ -7,7 +7,7 @@ My Gym Next
 で管理する Web アプリです。
 カレンダーから日付を選び、
 その日のトレーニング内容をシンプルに記録できます。
-- Demo: 
+- Demo: my-gym-next-js-e12o36x5q-mitsutakaninomiyas-projects.vercel.app
 - GitHub: https://github.com/MitsutakaNinomiya/my-gym-next.js-app
 
 使用技術
