@@ -23,7 +23,7 @@ My Gym Next
 ![Screen](docs/screenshots/date.png)
 
 ### Exercise Detail（セット管理）
-![Screen](docs/screenshots/date-exercise.png)
+![Screen](docs/screenshots/date-exerciseId.png)
 
 
 プロジェクトについて
