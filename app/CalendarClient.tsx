@@ -43,10 +43,10 @@ export default function CalendarClient({ markedDates }: MarkedDatesProps) {
       tileContent={({ date, view }) => {  // date=2025-12-18T15:00:00.000Z のようなDateオブジェクト、view="month"|"year"|"decade"|"century"のどれか
         if (view !== "month" ) return null; // 日付にボッチを付けたいので　month表示で実行
         const tileDateStr = toYmd(date); //整形
-
+        //タイル描画は全タイル分で判定が必要なので、高速判定できるSetを使う
         const hasLog = markedSet.has(tileDateStr); //markedSetにtileDateStrがあるかどうかを高速判定 
         return hasLog ? <div className="text-[10px] mt-0.5">●</div> : null; //ある場合は●を返す、無い場合は何も返さない
-      }}
+      }} 
     />
   );
 }

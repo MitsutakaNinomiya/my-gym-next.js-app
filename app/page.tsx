@@ -20,7 +20,7 @@ export default async function Page() { //サーバー側でデータ取りに行
 
   return (
     <main className="min-h-screen bg-gray-950 text-gray-50 p-6 md:p-10">
-      <h1 className="text-2xl font-bold mb-4">筋トレLog App</h1>
+      <h1 className="text-2xl font-bold mb-4">筋トレ記録App</h1>
         <div className="mx-auto max-w-md">
           <CalendarClient markedDates={markedDates} /> 
         </div>
