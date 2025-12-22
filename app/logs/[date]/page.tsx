@@ -19,10 +19,10 @@ type LogRow = {
 export default async function DailyLogsPage({ params }: {  // paramsはどこから来る？ → Next.jsのルーティング機能によって、自動的に渡される。 
   params: Promise<{date: string}>; // URLパラメータの型定義  
 }) { 
-  const { date } = await params; // URLパラメータから日付を取得　awaitはpromise[非同期処理]が解決するのを待つため
+  const { date } = await params; // URLパラメータから日付を取得     //awaitは非同期処理の完了を待つために使う
 
   // Supabase からこの日付のログを全部取得
-  const { data: logs, error } = await supabase
+  const { data: logs, error } = await supabase 
     .from("logs")
     .select("*")
     .eq("date", date) // eq（イーキュー）= 「○○と等しい」（条件絞り込み）★4

@@ -10,7 +10,7 @@
 
 ## Screenshots
 
-### Calendar（記録がある日にマーク）
+### Calendar（記録がある日に黒いボッチ）
 ![Calendar](docs/screenshots/calendar.png)
 
 ### Daily Logs（日付ごとのログ一覧）
@@ -76,10 +76,6 @@ logs テーブル（1セット = 1行）
 npm install
 npm run dev
 
-
-
-
----
 
 
 

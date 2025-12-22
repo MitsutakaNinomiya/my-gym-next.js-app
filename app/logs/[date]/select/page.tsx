@@ -26,10 +26,9 @@ type SelectExercisePageProps = {
 
 //  関数を async にしてawait で中身を取り出す
 export default async function SelectExercisePage(
-  props: SelectExercisePageProps 
+  props: SelectExercisePageProps  
 ) {
-  
-  const { date } = await props.params; // URLパラメータから日付を取得
+    const { date } = await props.params; // URLパラメータから日付を取得
 
   return (
     <main className="min-h-screen bg-gray-950 text-gray-50 p-6 md:p-10">
