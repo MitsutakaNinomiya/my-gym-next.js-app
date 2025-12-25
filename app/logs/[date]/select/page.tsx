@@ -42,7 +42,7 @@ export default async function SelectExercisePage(
 
       {/* 種目リスト */}
       <section className="space-y-2">
-        {EXERCISES.map((ex) => (
+        {EXERCISES.map((ex) => ( 
           <Link
             key={ex.id}
             href={`/logs/${date}/${ex.id}`}
